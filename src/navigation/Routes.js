@@ -6,7 +6,7 @@ import {AppTabs} from './AppTabs';
 import {AuthStack} from './AuthStack';
 
 export const Routes = () => {
-  const user = true;
+  const user = false;
   return (
     <NavigationContainer>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
