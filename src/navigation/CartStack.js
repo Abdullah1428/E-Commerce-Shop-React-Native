@@ -6,7 +6,9 @@ const Stack = createStackNavigator();
 
 export const CartStack = () => {
   return (
-    <Stack.Navigator initialRouteName="Cart">
+    <Stack.Navigator
+      screenOptions={{header: () => null}}
+      initialRouteName="Cart">
       <Stack.Screen name="Cart" component={Cart} />
     </Stack.Navigator>
   );

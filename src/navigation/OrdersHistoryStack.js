@@ -6,7 +6,9 @@ const Stack = createStackNavigator();
 
 export const OrdersHistoryStack = () => {
   return (
-    <Stack.Navigator initialRouteName="Orders">
+    <Stack.Navigator
+      screenOptions={{header: () => null}}
+      initialRouteName="Orders">
       <Stack.Screen name="Orders" component={OrdersHistory} />
     </Stack.Navigator>
   );
