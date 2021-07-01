@@ -18,6 +18,7 @@ const Product = ({navigation, route}) => {
         <Image source={product.image} style={style.imageStyle} />
       </View>
       <View style={style.detailsContainer}>
+        <Text style={style.category}>{product.category}</Text>
         <View style={style.productNamePrice}>
           <Text style={style.name}>{product.name}</Text>
           <View style={style.priceTag}>
@@ -167,6 +168,11 @@ const style = StyleSheet.create({
     fontSize: 16,
     lineHeight: 22,
     marginTop: 10,
+  },
+  category: {
+    marginLeft: 20,
+    fontSize: 15,
+    fontWeight: 'bold',
   },
 });
 
