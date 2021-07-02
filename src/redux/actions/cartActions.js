@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {LOCAL_SERVER_URL} from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   CART_ADD_ITEM,
@@ -8,7 +9,7 @@ import {
 } from '../constants/cartConstants';
 
 export const addToCart = (id, qty) => async (dispatch, getState) => {
-  const {data} = await axios.get(`/api/products/${id}`);
+  const {data} = await axios.get(`${LOCAL_SERVER_URL}/api/products/${id}`);
 
   dispatch({
     type: CART_ADD_ITEM,

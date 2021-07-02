@@ -8,11 +8,12 @@ import {
   Image,
   Dimensions,
 } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import COLORS from '../utils/constants/colors';
 const width = Dimensions.get('window').width / 2 - 30;
 
 import Rating from './Rating';
+
+import products from '../utils/constants/products';
 
 const ProductCard = ({product, handleProduct}) => {
   return (
@@ -21,7 +22,7 @@ const ProductCard = ({product, handleProduct}) => {
         activeOpacity={0.8}
         onPress={() => handleProduct(product)}>
         <View style={style.imageContainer}>
-          <Image source={product.image} style={style.image} />
+          <Image source={products[0].image} style={style.image} />
         </View>
         <Text
           numberOfLines={2}

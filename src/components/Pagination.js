@@ -2,13 +2,19 @@ import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import COLORS from '../utils/constants/colors';
 
-const Pagination = ({pages = 2, page = 1}) => {
+import {useNavigation} from '@react-navigation/native';
+
+const Pagination = ({pages, page}) => {
+  const navigation = useNavigation();
+
   return (
     pages > 1 && (
       <View style={style.pagination}>
         {[...Array(pages).keys()].map(x => (
           <View key={x + 1}>
-            <TouchableOpacity activeOpacity={0.5}>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={() => navigation.navigate('Home', {pageNumber: x + 1})}>
               <View
                 style={
                   x + 1 === page ? style.paginateBoxActive : style.paginateBox

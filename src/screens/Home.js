@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   SafeAreaView,
   StyleSheet,
@@ -9,18 +10,40 @@ import {
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import COLORS from '../utils/constants/colors';
-import products from '../utils/constants/products';
 
 import ProductCard from '../components/ProductCard';
 import Pagination from '../components/Pagination';
 import Loader from '../components/Loader';
+import Message from '../components/Message';
 
-const Home = ({navigation}) => {
+import {listProducts} from '../redux/actions/productActions';
+
+const Home = ({navigation, route}) => {
+  const keyword = '';
+
+  const pageNumberObject = route.params;
+
+  const pageNumber = (pageNumberObject && pageNumberObject.pageNumber) || 1;
+
+  const dispatch = useDispatch();
+
+  const productList = useSelector(state => state.productList);
+
+  const {loading, error, products, pages, page} = productList;
+
+  useEffect(() => {
+    dispatch(listProducts(keyword, pageNumber));
+  }, [dispatch, pageNumber]);
+
   const handleProduct = product => {
     navigation.navigate('Product', product);
   };
 
-  return (
+  return loading ? (
+    <Loader />
+  ) : error ? (
+    <Message>{error}</Message>
+  ) : (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <View>
@@ -51,14 +74,6 @@ const Home = ({navigation}) => {
           paddingBottom: 50,
         }}
         scrollEnabled={true}
-        removeClippedSubviews={true}
-        onEndReachedThreshold={1}
-        scrollEventThrottle={250}
-        maxToRenderPerBatch={10}
-        updateCellsBatchingPeriod={200}
-        initialNumToRender={10}
-        snapToAlignment="center"
-        decelerationRate={'fast'}
         keyExtractor={(_, index) => index.toString()}
         numColumns={2}
         data={products}
@@ -70,7 +85,7 @@ const Home = ({navigation}) => {
           marginTop: 20,
           alignSelf: 'center',
         }}
-        ListFooterComponent={() => <Pagination />}
+        ListFooterComponent={() => <Pagination pages={pages} page={page} />}
       />
     </SafeAreaView>
   );
