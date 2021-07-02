@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   SafeAreaView,
@@ -7,6 +7,7 @@ import {
   Text,
   TextInput,
   FlatList,
+  TouchableOpacity,
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import COLORS from '../utils/constants/colors';
@@ -19,7 +20,8 @@ import Message from '../components/Message';
 import {listProducts} from '../redux/actions/productActions';
 
 const Home = ({navigation, route}) => {
-  const keyword = '';
+  const [textInput, setTextInput] = useState('');
+  const [keyword, setKeyword] = useState('');
 
   const pageNumberObject = route.params;
 
@@ -33,17 +35,13 @@ const Home = ({navigation, route}) => {
 
   useEffect(() => {
     dispatch(listProducts(keyword, pageNumber));
-  }, [dispatch, pageNumber]);
+  }, [dispatch, pageNumber, keyword]);
 
   const handleProduct = product => {
     navigation.navigate('Product', product);
   };
 
-  return loading ? (
-    <Loader />
-  ) : error ? (
-    <Message>{error}</Message>
-  ) : (
+  return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <View>
@@ -60,33 +58,47 @@ const Home = ({navigation, route}) => {
       <View style={styles.searchArea}>
         <View style={styles.searchContainer}>
           <AntDesign name="search1" size={25} style={{marginLeft: 20}} />
-          <TextInput placeholder="Search Product..." style={styles.input} />
+          <TextInput
+            placeholder="Search Product..."
+            style={styles.input}
+            value={textInput}
+            onChangeText={text => setTextInput(text)}
+          />
         </View>
+
         <View style={styles.sortBtn}>
-          <AntDesign name="check" size={20} color={COLORS.white} />
+          <TouchableOpacity onPress={() => setKeyword(textInput)}>
+            <AntDesign name="check" size={20} color={COLORS.white} />
+          </TouchableOpacity>
         </View>
       </View>
-      <FlatList
-        columnWrapperStyle={{justifyContent: 'space-between'}}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          marginTop: 10,
-          paddingBottom: 50,
-        }}
-        scrollEnabled={true}
-        keyExtractor={(_, index) => index.toString()}
-        numColumns={2}
-        data={products}
-        renderItem={({item}) => {
-          return <ProductCard product={item} handleProduct={handleProduct} />;
-        }}
-        ListFooterComponentStyle={{
-          paddingHorizontal: 20,
-          marginTop: 20,
-          alignSelf: 'center',
-        }}
-        ListFooterComponent={() => <Pagination pages={pages} page={page} />}
-      />
+      {loading ? (
+        <Loader />
+      ) : error ? (
+        <Message>{error}</Message>
+      ) : (
+        <FlatList
+          columnWrapperStyle={{justifyContent: 'space-between'}}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            marginTop: 10,
+            paddingBottom: 50,
+          }}
+          scrollEnabled={true}
+          keyExtractor={(_, index) => index.toString()}
+          numColumns={2}
+          data={products}
+          renderItem={({item}) => {
+            return <ProductCard product={item} handleProduct={handleProduct} />;
+          }}
+          ListFooterComponentStyle={{
+            paddingHorizontal: 20,
+            marginTop: 20,
+            alignSelf: 'center',
+          }}
+          ListFooterComponent={() => <Pagination pages={pages} page={page} />}
+        />
+      )}
     </SafeAreaView>
   );
 };
