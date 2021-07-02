@@ -1,7 +1,6 @@
-import {createStore, combineReducers, applyMiddleware} from 'redux';
+import {createStore, combineReducers, applyMiddleware, compose} from 'redux';
 import thunk from 'redux-thunk';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {composeWithDevTools} from 'remote-redux-devtools';
 
 // product reducers
 import {
@@ -103,10 +102,16 @@ const initialState = {
 
 const middleware = [thunk];
 
+let composeEnhancers = compose;
+
+if (__DEV__) {
+  composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+}
+
 const store = createStore(
   reducer,
   initialState,
-  composeWithDevTools(applyMiddleware(...middleware)),
+  composeEnhancers(applyMiddleware(...middleware)),
 );
 
 export default store;
