@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, TouchableOpacity, View, Text} from 'react-native';
 import COLORS from '../utils/constants/colors';
 
-const PrimaryButton = ({title, onPress = () => {}}) => {
+const PrimaryButton = ({title, onPress}) => {
   return (
     <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
       <View style={style.btnContainer}>
@@ -11,7 +11,7 @@ const PrimaryButton = ({title, onPress = () => {}}) => {
     </TouchableOpacity>
   );
 };
-const SecondaryButton = ({title, onPress = () => {}}) => {
+const SecondaryButton = ({title, onPress}) => {
   return (
     <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
       <View style={{...style.btnContainer, backgroundColor: COLORS.white}}>

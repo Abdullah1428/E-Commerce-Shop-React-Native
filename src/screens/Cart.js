@@ -6,6 +6,10 @@ import CartItem from '../components/CartItem';
 import {PrimaryButton} from '../components/Button';
 
 const Cart = ({navigation}) => {
+  const onPress = () => {
+    navigation.navigate('Shipping');
+  };
+
   return (
     <SafeAreaView style={style.container}>
       <View style={style.header}>
@@ -41,7 +45,7 @@ const Cart = ({navigation}) => {
               <Text style={{fontSize: 18, fontWeight: 'bold'}}>$50</Text>
             </View>
             <View style={{marginHorizontal: 30}}>
-              <PrimaryButton title="Proceed to Checkout" />
+              <PrimaryButton title="Proceed to Checkout" onPress={onPress} />
             </View>
           </View>
         )}

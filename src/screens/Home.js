@@ -25,7 +25,12 @@ const Home = ({navigation}) => {
           <Text style={styles.welcome}>Welcome To</Text>
           <Text style={styles.appName}>Food King</Text>
         </View>
-        <AntDesign name={'shoppingcart'} size={28} color={COLORS.tomato} />
+        <AntDesign
+          onPress={() => navigation.navigate('Cart')}
+          name={'shoppingcart'}
+          size={28}
+          color={COLORS.tomato}
+        />
       </View>
       <View style={styles.searchArea}>
         <View style={styles.searchContainer}>

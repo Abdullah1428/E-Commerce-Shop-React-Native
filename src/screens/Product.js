@@ -12,7 +12,12 @@ const Product = ({navigation, route}) => {
     <SafeAreaView style={style.container}>
       <View style={style.header}>
         <Icon name="arrow-back" size={28} onPress={() => navigation.goBack()} />
-        <Icon name="shopping-cart" size={28} />
+        <AntDesign
+          onPress={() => navigation.navigate('Cart')}
+          name={'shoppingcart'}
+          size={28}
+          color={COLORS.tomato}
+        />
       </View>
       <View style={style.imageContainer}>
         <Image source={product.image} style={style.imageStyle} />
