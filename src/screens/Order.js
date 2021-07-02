@@ -1,33 +1,36 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet, View, Text, FlatList} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import COLORS from '../utils/constants/colors';
 import {PrimaryButton} from '../components/Button';
-import CheckoutSteps from '../components/CheckoutSteps';
 import PlaceOrderItem from '../components/PlaceOrderItem';
 
 import products from '../utils/constants/products';
 
-const PlaceOrder = ({navigation}) => {
+const Order = ({navigation}) => {
   const onPress = () => {
-    navigation.navigate('Order');
+    // handle on press
   };
 
   return (
     <SafeAreaView style={style.container}>
-      <Icon name="arrow-back" size={28} onPress={() => navigation.goBack()} />
-      <CheckoutSteps step1 step2 step3 step4 />
       <View style={style.shippingAddressContainer}>
+        <Text style={style.orderID}>Order ID: 232432534353523532452352</Text>
         <Text style={style.title}>Shipping Address</Text>
         <Text numberOfLines={2} style={style.para}>
           * Address city postal code country
         </Text>
+        <View style={style.deliverBlock}>
+          <Text style={style.deliverText}>Not Delivered</Text>
+        </View>
       </View>
       <View style={style.paymentContainer}>
         <Text style={style.title}>Payment Method</Text>
         <Text numberOfLines={1} style={style.para}>
           * Cash
         </Text>
+        <View style={style.deliverBlock}>
+          <Text style={style.deliverText}>Not Paid</Text>
+        </View>
       </View>
       <View style={style.paymentContainer}>
         <Text style={style.title}>Your Order</Text>
@@ -64,9 +67,6 @@ const PlaceOrder = ({navigation}) => {
               </Text>
               <Text style={{fontSize: 18, fontWeight: 'bold'}}>$50</Text>
             </View>
-            <View style={{marginHorizontal: 30}}>
-              <PrimaryButton title="Place Order" onPress={onPress} />
-            </View>
           </View>
         )}
       />
@@ -90,6 +90,12 @@ const style = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 10,
   },
+  orderID: {
+    fontSize: 16,
+    color: COLORS.dark,
+    paddingBottom: 10,
+    fontWeight: 'bold',
+  },
   title: {
     fontSize: 20,
     color: COLORS.dark,
@@ -102,6 +108,19 @@ const style = StyleSheet.create({
     paddingBottom: 10,
     marginLeft: 5,
   },
+  deliverBlock: {
+    height: 50,
+    width: '100%',
+    borderRadius: 10,
+    backgroundColor: '#d0f0c0', // #ffcccb
+    justifyContent: 'center',
+  },
+  deliverText: {
+    alignSelf: 'center',
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: COLORS.dark,
+  },
 });
 
-export default PlaceOrder;
+export default Order;

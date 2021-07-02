@@ -33,18 +33,15 @@ const Cart = ({navigation}) => {
         ListFooterComponentStyle={{paddingHorizontal: 20, marginTop: 20}}
         ListFooterComponent={() => (
           <View>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginVertical: 15,
-              }}>
-              <Text style={{fontSize: 18, fontWeight: 'bold'}}>
-                Total Price
-              </Text>
-              <Text style={{fontSize: 18, fontWeight: 'bold'}}>$50</Text>
+            <View style={style.summary}>
+              <Text style={style.summaryText}>Subtotal Items</Text>
+              <Text style={style.summaryText}>$50</Text>
             </View>
-            <View style={{marginHorizontal: 30}}>
+            <View style={style.summary}>
+              <Text style={style.summaryText}>Total Price</Text>
+              <Text style={style.summaryText}>$50</Text>
+            </View>
+            <View style={{marginTop: 20}}>
               <PrimaryButton title="Proceed to Checkout" onPress={onPress} />
             </View>
           </View>
@@ -67,6 +64,15 @@ const style = StyleSheet.create({
   },
   title: {
     fontSize: 20,
+    fontWeight: 'bold',
+  },
+  summary: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 15,
+  },
+  summaryText: {
+    fontSize: 18,
     fontWeight: 'bold',
   },
 });

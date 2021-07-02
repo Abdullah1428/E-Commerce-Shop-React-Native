@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, StyleSheet, TextInput, View, Text} from 'react-native';
+import {SafeAreaView, StyleSheet, View, Text} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import COLORS from '../utils/constants/colors';
@@ -8,7 +8,7 @@ import CheckoutSteps from '../components/CheckoutSteps';
 
 const Payment = ({navigation}) => {
   const onPress = () => {
-    // handle on press
+    navigation.navigate('PlaceOrder');
   };
 
   return (

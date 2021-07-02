@@ -1,10 +1,8 @@
 import React from 'react';
 import {StyleSheet, View, Image, Text} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-
 import COLORS from '../utils/constants/colors';
 
-const CartItem = ({item}) => {
+const PlaceOrderItem = ({item}) => {
   return (
     <View style={style.container}>
       <Image source={item.image} style={style.imageStyle} />
@@ -15,23 +13,6 @@ const CartItem = ({item}) => {
         <Text style={style.category}>{item.category}</Text>
         <Text style={style.price}>${item.price}</Text>
       </View>
-      <View style={style.qtyCon}>
-        <Text style={style.qty}>3</Text>
-        <View style={style.actionBtn}>
-          <Icon
-            name="remove"
-            size={25}
-            color={COLORS.white}
-            style={{alignSelf: 'center'}}
-          />
-          <Icon
-            name="add"
-            size={25}
-            color={COLORS.white}
-            style={{alignSelf: 'center'}}
-          />
-        </View>
-      </View>
     </View>
   );
 };
@@ -39,8 +20,8 @@ const CartItem = ({item}) => {
 const style = StyleSheet.create({
   container: {
     height: 100,
-    elevation: 15,
     borderRadius: 10,
+    elevation: 10,
     backgroundColor: COLORS.white,
     marginVertical: 10,
     marginHorizontal: 20,
@@ -94,4 +75,4 @@ const style = StyleSheet.create({
   },
 });
 
-export default CartItem;
+export default PlaceOrderItem;

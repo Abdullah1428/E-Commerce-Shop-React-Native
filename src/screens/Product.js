@@ -1,5 +1,12 @@
-import React from 'react';
-import {View, SafeAreaView, Image, Text, StyleSheet} from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  SafeAreaView,
+  Image,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -7,6 +14,18 @@ import COLORS from '../utils/constants/colors';
 
 const Product = ({navigation, route}) => {
   const product = route.params;
+
+  const [qty, setqty] = useState(1);
+
+  const handleQty = param => {
+    if (param === 'neg') {
+      if (qty !== 0) {
+        setqty(qty - 1);
+      }
+    } else if (param === 'pos') {
+      setqty(qty + 1);
+    }
+  };
 
   return (
     <SafeAreaView style={style.container}>
@@ -30,21 +49,33 @@ const Product = ({navigation, route}) => {
             <Text style={style.price}>${product.price}</Text>
           </View>
         </View>
-        <View style={style.qtyBuy}>
-          <View style={style.qtyBuyContainer}>
-            <View style={style.borderBtn}>
-              <AntDesign name={'minus'} size={25} color={COLORS.tomato} />
+        {product.countInStock > 0 ? (
+          <View style={style.qtyBuy}>
+            <View style={style.qtyBuyContainer}>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={() => handleQty('neg')}>
+                <View style={style.borderBtn}>
+                  <AntDesign name={'minus'} size={25} color={COLORS.tomato} />
+                </View>
+              </TouchableOpacity>
+              <Text style={style.qty}>{qty}</Text>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={() => handleQty('pos')}>
+                <View style={style.borderBtn}>
+                  <Ionicons name={'add'} size={25} color={COLORS.tomato} />
+                </View>
+              </TouchableOpacity>
             </View>
-            <Text style={style.qty}>1</Text>
-            <View style={style.borderBtn}>
-              <Ionicons name={'add'} size={25} color={COLORS.tomato} />
-            </View>
-          </View>
 
-          <View style={style.priceTag}>
-            <Text style={style.buyText}>Buy</Text>
+            <View style={style.priceTag}>
+              <Text style={style.buyText}>Buy</Text>
+            </View>
           </View>
-        </View>
+        ) : (
+          <Text style={style.outOfStock}>Out of Stock</Text>
+        )}
         <View style={style.aboutContainer}>
           <Text numberOfLines={5} style={style.aboutText}>
             About
@@ -177,6 +208,12 @@ const style = StyleSheet.create({
   category: {
     marginLeft: 20,
     fontSize: 15,
+    fontWeight: 'bold',
+  },
+  outOfStock: {
+    marginTop: 10,
+    marginLeft: 20,
+    fontSize: 20,
     fontWeight: 'bold',
   },
 });
