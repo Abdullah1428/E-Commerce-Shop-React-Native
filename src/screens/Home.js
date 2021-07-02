@@ -12,6 +12,7 @@ import COLORS from '../utils/constants/colors';
 import products from '../utils/constants/products';
 
 import ProductCard from '../components/ProductCard';
+import Pagination from '../components/Pagination';
 
 const Home = ({navigation}) => {
   const handleProduct = product => {
@@ -63,6 +64,12 @@ const Home = ({navigation}) => {
         renderItem={({item}) => {
           return <ProductCard product={item} handleProduct={handleProduct} />;
         }}
+        ListFooterComponentStyle={{
+          paddingHorizontal: 20,
+          marginTop: 20,
+          alignSelf: 'center',
+        }}
+        ListFooterComponent={() => <Pagination />}
       />
     </SafeAreaView>
   );
