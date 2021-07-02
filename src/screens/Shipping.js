@@ -39,7 +39,6 @@ const Shipping = ({navigation}) => {
           <TextInput
             style={style.textInput}
             placeholder={'Postal Code'}
-            secureTextEntry={true}
             placeholderTextColor={COLORS.dark}
             underlineColorAndroid={'transparent'}
           />
@@ -47,7 +46,6 @@ const Shipping = ({navigation}) => {
           <TextInput
             style={style.textInput}
             placeholder={'Country'}
-            secureTextEntry={true}
             placeholderTextColor={COLORS.dark}
             underlineColorAndroid={'transparent'}
           />
