@@ -1,5 +1,5 @@
 import React from 'react';
-
+import {LOCAL_SERVER_URL} from '@env';
 import {
   StyleSheet,
   View,
@@ -10,10 +10,7 @@ import {
 } from 'react-native';
 import COLORS from '../utils/constants/colors';
 const width = Dimensions.get('window').width / 2 - 30;
-
 import Rating from './Rating';
-
-import products from '../utils/constants/products';
 
 const ProductCard = ({product, handleProduct}) => {
   return (
@@ -22,7 +19,10 @@ const ProductCard = ({product, handleProduct}) => {
         activeOpacity={0.8}
         onPress={() => handleProduct(product)}>
         <View style={style.imageContainer}>
-          <Image source={products[0].image} style={style.image} />
+          <Image
+            source={{uri: `${LOCAL_SERVER_URL}${product.image}`}}
+            style={style.image}
+          />
         </View>
         <Text
           numberOfLines={2}
