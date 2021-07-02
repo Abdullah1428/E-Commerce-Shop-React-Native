@@ -1,7 +1,7 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
-export const Center = ({children}) => {
+const Center = ({children}) => {
   return <View style={styles.container}>{children}</View>;
 };
 
@@ -12,3 +12,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+export default Center;

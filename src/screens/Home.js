@@ -13,6 +13,7 @@ import products from '../utils/constants/products';
 
 import ProductCard from '../components/ProductCard';
 import Pagination from '../components/Pagination';
+import Loader from '../components/Loader';
 
 const Home = ({navigation}) => {
   const handleProduct = product => {
