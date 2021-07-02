@@ -1,17 +1,23 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet, View, Text, FlatList} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import COLORS from '../utils/constants/colors';
 import PlaceOrderItem from '../components/PlaceOrderItem';
 
 import products from '../utils/constants/products';
 
-const Order = ({navigation}) => {
+const Order = ({navigation, route}) => {
   const onPress = () => {
     // handle on press
   };
 
+  const history = route.params;
+
   return (
     <SafeAreaView style={style.container}>
+      {history && (
+        <Icon name="arrow-back" size={28} onPress={() => navigation.goBack()} />
+      )}
       <View style={style.shippingAddressContainer}>
         <Text style={style.orderID}>Order ID: 232432534353523532452352</Text>
         <Text style={style.title}>Shipping Address</Text>
