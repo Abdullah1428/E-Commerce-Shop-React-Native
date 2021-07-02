@@ -5,6 +5,8 @@ import Shipping from '../screens/Shipping';
 import Payment from '../screens/Payment';
 import PlaceOrder from '../screens/PlaceOrder';
 import Order from '../screens/Order';
+import Signup from '../screens/Signup';
+import Login from '../screens/Login';
 
 const Stack = createStackNavigator();
 
@@ -18,6 +20,8 @@ export const CartStack = () => {
       <Stack.Screen name="Payment" component={Payment} />
       <Stack.Screen name="PlaceOrder" component={PlaceOrder} />
       <Stack.Screen name="Order" component={Order} />
+      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Signup" component={Signup} />
     </Stack.Navigator>
   );
 };
