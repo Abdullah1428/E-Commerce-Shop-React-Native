@@ -11,6 +11,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import COLORS from '../utils/constants/colors';
+import Rating from '../components/Rating';
 
 const Product = ({navigation, route}) => {
   const product = route.params;
@@ -42,6 +43,12 @@ const Product = ({navigation, route}) => {
         <Image source={product.image} style={style.imageStyle} />
       </View>
       <View style={style.detailsContainer}>
+        <View style={style.ratingContainer}>
+          <Rating value={product.rating} />
+          <View style={style.addToCart}>
+            <Text style={style.buyText}>{product.numReviews} reviews</Text>
+          </View>
+        </View>
         <Text style={style.category}>{product.category}</Text>
         <View style={style.productNamePrice}>
           <Text style={style.name}>{product.name}</Text>
@@ -69,9 +76,11 @@ const Product = ({navigation, route}) => {
               </TouchableOpacity>
             </View>
 
-            <View style={style.priceTag}>
-              <Text style={style.buyText}>Buy</Text>
-            </View>
+            <TouchableOpacity activeOpacity={0.5}>
+              <View style={style.addToCart}>
+                <Text style={style.buyText}>Add to Cart</Text>
+              </View>
+            </TouchableOpacity>
           </View>
         ) : (
           <Text style={style.outOfStock}>Out of Stock</Text>
@@ -117,9 +126,16 @@ const style = StyleSheet.create({
     marginTop: 30,
     paddingTop: 30,
   },
-  productNamePrice: {
+  ratingContainer: {
     marginLeft: 20,
     marginTop: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  productNamePrice: {
+    marginLeft: 20,
+    marginTop: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -185,6 +201,14 @@ const style = StyleSheet.create({
     borderTopLeftRadius: 25,
     borderBottomLeftRadius: 25,
   },
+  addToCart: {
+    backgroundColor: COLORS.green,
+    width: 120,
+    height: 40,
+    justifyContent: 'center',
+    borderTopLeftRadius: 25,
+    borderBottomLeftRadius: 25,
+  },
   buyText: {
     alignSelf: 'center',
     color: COLORS.white,
@@ -207,6 +231,7 @@ const style = StyleSheet.create({
   },
   category: {
     marginLeft: 20,
+    marginTop: 10,
     fontSize: 15,
     fontWeight: 'bold',
   },
