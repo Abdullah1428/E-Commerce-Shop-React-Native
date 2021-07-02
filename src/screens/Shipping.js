@@ -10,10 +10,14 @@ const Shipping = ({navigation}) => {
     navigation.navigate('Payment');
   };
 
+  const handleNav = nav => {
+    navigation.navigate(nav);
+  };
+
   return (
     <SafeAreaView style={style.container}>
       <Icon name="arrow-back" size={28} onPress={() => navigation.goBack()} />
-      <CheckoutSteps step1 step2 />
+      <CheckoutSteps step1 step2 handleNav={handleNav} />
       <View style={style.addressContainer}>
         <View style={style.registerForm}>
           <Text style={style.header}>Register Your Shipping Address</Text>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {SafeAreaView, StyleSheet, View, Text, FlatList} from 'react-native';
 import COLORS from '../utils/constants/colors';
 import products from '../utils/constants/products';
@@ -8,6 +8,18 @@ import {PrimaryButton} from '../components/Button';
 const Cart = ({navigation}) => {
   const onPress = () => {
     navigation.navigate('Shipping');
+  };
+
+  const [qty, setqty] = useState(1);
+
+  const handleQty = param => {
+    if (param === 'neg') {
+      if (qty !== 0) {
+        setqty(qty - 1);
+      }
+    } else if (param === 'pos') {
+      setqty(qty + 1);
+    }
   };
 
   return (
@@ -29,7 +41,9 @@ const Cart = ({navigation}) => {
         snapToAlignment="center"
         decelerationRate={'fast'}
         keyExtractor={(_, index) => index.toString()}
-        renderItem={({item}) => <CartItem item={item} />}
+        renderItem={({item}) => (
+          <CartItem item={item} qty={qty} handleQty={handleQty} />
+        )}
         ListFooterComponentStyle={{paddingHorizontal: 20, marginTop: 20}}
         ListFooterComponent={() => (
           <View>

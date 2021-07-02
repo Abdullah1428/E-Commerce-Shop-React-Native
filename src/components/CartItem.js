@@ -1,10 +1,10 @@
 import React from 'react';
-import {StyleSheet, View, Image, Text} from 'react-native';
+import {StyleSheet, View, Image, Text, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import COLORS from '../utils/constants/colors';
 
-const CartItem = ({item}) => {
+const CartItem = ({item, qty, handleQty}) => {
   return (
     <View style={style.container}>
       <Image source={item.image} style={style.imageStyle} />
@@ -16,20 +16,18 @@ const CartItem = ({item}) => {
         <Text style={style.price}>${item.price}</Text>
       </View>
       <View style={style.qtyCon}>
-        <Text style={style.qty}>3</Text>
+        <Text style={style.qty}>{qty}</Text>
         <View style={style.actionBtn}>
-          <Icon
-            name="remove"
-            size={25}
-            color={COLORS.white}
-            style={{alignSelf: 'center'}}
-          />
-          <Icon
-            name="add"
-            size={25}
-            color={COLORS.white}
-            style={{alignSelf: 'center'}}
-          />
+          <TouchableOpacity
+            onPress={() => handleQty('neg')}
+            style={{justifyContent: 'center'}}>
+            <Icon name="remove" size={25} color={COLORS.white} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => handleQty('pos')}
+            style={{justifyContent: 'center'}}>
+            <Icon name="add" size={25} color={COLORS.white} />
+          </TouchableOpacity>
         </View>
       </View>
     </View>

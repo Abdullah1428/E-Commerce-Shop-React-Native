@@ -13,10 +13,14 @@ const PlaceOrder = ({navigation}) => {
     navigation.navigate('Order');
   };
 
+  const handleNav = nav => {
+    navigation.navigate(nav);
+  };
+
   return (
     <SafeAreaView style={style.container}>
       <Icon name="arrow-back" size={28} onPress={() => navigation.goBack()} />
-      <CheckoutSteps step1 step2 step3 step4 />
+      <CheckoutSteps step1 step2 step3 step4 handleNav={handleNav} />
       <View style={style.shippingAddressContainer}>
         <Text style={style.title}>Shipping Address</Text>
         <Text numberOfLines={2} style={style.para}>
@@ -53,16 +57,22 @@ const PlaceOrder = ({navigation}) => {
         ListFooterComponentStyle={{paddingHorizontal: 20, marginTop: 20}}
         ListFooterComponent={() => (
           <View>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginVertical: 15,
-              }}>
-              <Text style={{fontSize: 18, fontWeight: 'bold'}}>
-                Total Price
-              </Text>
-              <Text style={{fontSize: 18, fontWeight: 'bold'}}>$50</Text>
+            <Text style={style.summaryTitle}>Order Summary</Text>
+            <View style={style.summary}>
+              <Text style={style.summaryText}>Items</Text>
+              <Text style={style.summaryText}>$50</Text>
+            </View>
+            <View style={style.summary}>
+              <Text style={style.summaryText}>Shipping</Text>
+              <Text style={style.summaryText}>$50</Text>
+            </View>
+            <View style={style.summary}>
+              <Text style={style.summaryText}>Tax</Text>
+              <Text style={style.summaryText}>$50</Text>
+            </View>
+            <View style={style.summary}>
+              <Text style={style.summaryText}>Total</Text>
+              <Text style={style.summaryText}>$50</Text>
             </View>
             <View style={{marginHorizontal: 30}}>
               <PrimaryButton title="Place Order" onPress={onPress} />
@@ -101,6 +111,21 @@ const style = StyleSheet.create({
     color: COLORS.dark,
     paddingBottom: 10,
     marginLeft: 5,
+  },
+  summaryTitle: {
+    fontSize: 20,
+    color: COLORS.dark,
+    alignSelf: 'center',
+    fontWeight: 'bold',
+  },
+  summary: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 15,
+  },
+  summaryText: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 

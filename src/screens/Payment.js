@@ -11,10 +11,14 @@ const Payment = ({navigation}) => {
     navigation.navigate('PlaceOrder');
   };
 
+  const handleNav = nav => {
+    navigation.navigate(nav);
+  };
+
   return (
     <SafeAreaView style={style.container}>
       <Icon name="arrow-back" size={28} onPress={() => navigation.goBack()} />
-      <CheckoutSteps step1 step2 step3 />
+      <CheckoutSteps step1 step2 step3 handleNav={handleNav} />
       <View style={style.addressContainer}>
         <Text style={style.header}>Payment Method</Text>
         <View style={style.cashContainer}>

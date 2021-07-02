@@ -1,7 +1,6 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet, View, Text, FlatList} from 'react-native';
 import COLORS from '../utils/constants/colors';
-import {PrimaryButton} from '../components/Button';
 import PlaceOrderItem from '../components/PlaceOrderItem';
 
 import products from '../utils/constants/products';
@@ -56,16 +55,22 @@ const Order = ({navigation}) => {
         ListFooterComponentStyle={{paddingHorizontal: 20, marginTop: 20}}
         ListFooterComponent={() => (
           <View>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginVertical: 15,
-              }}>
-              <Text style={{fontSize: 18, fontWeight: 'bold'}}>
-                Total Price
-              </Text>
-              <Text style={{fontSize: 18, fontWeight: 'bold'}}>$50</Text>
+            <Text style={style.summaryTitle}>Order Summary</Text>
+            <View style={style.summary}>
+              <Text style={style.summaryText}>Items</Text>
+              <Text style={style.summaryText}>$50</Text>
+            </View>
+            <View style={style.summary}>
+              <Text style={style.summaryText}>Shipping</Text>
+              <Text style={style.summaryText}>$50</Text>
+            </View>
+            <View style={style.summary}>
+              <Text style={style.summaryText}>Tax</Text>
+              <Text style={style.summaryText}>$50</Text>
+            </View>
+            <View style={style.summary}>
+              <Text style={style.summaryText}>Total</Text>
+              <Text style={style.summaryText}>$50</Text>
             </View>
           </View>
         )}
@@ -120,6 +125,21 @@ const style = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: COLORS.dark,
+  },
+  summaryTitle: {
+    fontSize: 20,
+    color: COLORS.dark,
+    alignSelf: 'center',
+    fontWeight: 'bold',
+  },
+  summary: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 15,
+  },
+  summaryText: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 
