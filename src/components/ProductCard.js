@@ -8,12 +8,11 @@ import {
   Image,
   Dimensions,
 } from 'react-native';
-
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
 import COLORS from '../utils/constants/colors';
-
 const width = Dimensions.get('window').width / 2 - 30;
+
+import Rating from './Rating';
 
 const ProductCard = ({product, handleProduct}) => {
   return (
@@ -30,11 +29,10 @@ const ProductCard = ({product, handleProduct}) => {
           {product.name}
         </Text>
       </TouchableOpacity>
-      <View style={style.addtoCart}>
+      <Rating value={product.rating} />
+      <View style={style.ratingContainer}>
         <Text style={style.price}>${product.price}</Text>
-        <View style={style.plusBox}>
-          <Ionicons name={'add'} size={25} color={COLORS.white} />
-        </View>
+        <Text style={style.price}>{product.numReviews} reviews</Text>
       </View>
     </View>
   );
@@ -42,7 +40,7 @@ const ProductCard = ({product, handleProduct}) => {
 
 const style = StyleSheet.create({
   card: {
-    height: 225,
+    height: 250,
     backgroundColor: COLORS.light,
     width,
     marginHorizontal: 2,
@@ -50,20 +48,14 @@ const style = StyleSheet.create({
     marginBottom: 20,
     padding: 15,
   },
-  plusBox: {
-    height: 25,
-    width: 25,
-    backgroundColor: COLORS.tomato,
-    borderRadius: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+
   price: {
-    fontSize: 20,
+    fontSize: 15,
     fontWeight: 'bold',
     color: COLORS.tomato,
+    marginTop: 5,
   },
-  addtoCart: {
+  ratingContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 5,
