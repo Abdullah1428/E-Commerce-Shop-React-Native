@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {LOCAL_SERVER_URL} from '@env';
 import {
   View,
@@ -10,17 +10,58 @@ import {
   FlatList,
   SafeAreaView,
 } from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+
 import COLORS from '../utils/constants/colors';
 import Rating from '../components/Rating';
+import Loader from '../components/Loader';
+import Message from '../components/Message';
+
+import {
+  listProductDetails,
+  createProductReview,
+} from '../redux/actions/productActions';
+import {PRODUCT_CREATE_REVIEW_RESET} from '../redux/constants/productConstants';
 
 const Product = ({navigation, route}) => {
-  const product = route.params;
+  const id = route.params;
 
   const [qty, setqty] = useState(1);
   const [userRating, setUserRating] = useState(1);
+  const [comment, setComment] = useState('');
+
+  const dispatch = useDispatch();
+
+  const userLogin = useSelector(state => state.userLogin);
+  const {userInfo} = userLogin;
+
+  const productDetails = useSelector(state => state.productDetails);
+  const {loading, error, product} = productDetails;
+
+  const productReviewCreate = useSelector(state => state.productReviewCreate);
+  const {
+    success: successProductReview,
+    error: errorProductReview,
+  } = productReviewCreate;
+
+  useEffect(() => {
+    /*
+    if (!userInfo) {
+      history.push('/login')
+    }
+    */
+
+    if (successProductReview) {
+      setUserRating(1);
+      setComment('');
+      dispatch({type: PRODUCT_CREATE_REVIEW_RESET});
+    }
+    dispatch(listProductDetails(id));
+  }, [dispatch, successProductReview, userInfo, id]);
 
   const handleQty = param => {
     if (param === 'neg') {
@@ -44,55 +85,25 @@ const Product = ({navigation, route}) => {
     }
   };
 
-  const reviews = [
-    {
-      _id: '1',
-      name: 'john',
-      rating: '5',
-      createdAt: '2021-5-7',
-      comment: 'Nice product khan',
-    },
-    {
-      _id: '1',
-      name: 'john',
-      rating: '5',
-      createdAt: '2021-5-7',
-      comment: 'Nice product khan',
-    },
-    {
-      _id: '2',
-      name: 'john',
-      rating: '5',
-      createdAt: '2021-5-7',
-      comment: 'Nice product khan',
-    },
-    {
-      _id: '3',
-      name: 'john',
-      rating: '5',
-      createdAt: '2021-5-7',
-      comment: 'Nice product khan',
-    },
-    {
-      _id: '4',
-      name: 'john',
-      rating: '5',
-      createdAt: '2021-5-7',
-      comment: 'Nice product khan',
-    },
-    {
-      _id: '5',
-      name: 'john',
-      rating: '5',
-      createdAt: '2021-5-7',
-      comment: 'Nice product khan',
-    },
-  ];
+  const reviewSubmitHandler = () => {
+    dispatch(createProductReview(id, {userRating, comment}));
+  };
 
-  return (
+  return loading ? (
+    <Loader />
+  ) : error ? (
+    <>
+      <Icon
+        name="arrow-back"
+        size={28}
+        onPress={() => navigation.goBack()}
+        style={{marginLeft: 20, marginTop: 20}}
+      />
+      <Message>{error}</Message>
+    </>
+  ) : (
     <SafeAreaView style={style.container}>
       <FlatList
-        //columnWrapperStyle={{justifyContent: 'space-between'}}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           marginTop: 0,
@@ -100,13 +111,17 @@ const Product = ({navigation, route}) => {
         }}
         scrollEnabled={true}
         keyExtractor={(_, index) => index.toString()}
-        data={reviews}
+        data={
+          product && product.reviews && product.reviews.length === 0
+            ? []
+            : product.reviews
+        }
         renderItem={({item}) => {
           return (
             <View style={style.reviewBox}>
               <View style={style.reviewTop}>
                 <Text>{item.name}</Text>
-                <Text>{item.createdAt}</Text>
+                <Text>{item.createdAt.substring(0, 10)}</Text>
               </View>
 
               <View style={{marginLeft: 15}}>
@@ -138,7 +153,7 @@ const Product = ({navigation, route}) => {
             <View style={style.imageContainer}>
               <Image
                 source={{uri: `${LOCAL_SERVER_URL}${product.image}`}}
-                style={style.imageStyle}
+                style={style.image}
               />
             </View>
             <View style={style.detailsContainer}>
@@ -200,55 +215,82 @@ const Product = ({navigation, route}) => {
               </View>
             </View>
             <View style={style.reviewsContainer}>
-              <Text style={style.reviewTitle}>Reviews</Text>
+              <Text style={style.reviewTitle}>
+                {product && product.reviews && product.reviews.length === 0
+                  ? 'No Reviews'
+                  : 'Reviews'}
+              </Text>
             </View>
           </View>
         )}
         ListFooterComponent={() => (
           <View style={style.reviewsContainer}>
             <Text style={style.reviewTitle}>Write a Customer Review</Text>
-            <View style={style.chooseReviewContainer}>
-              <View style={style.qtyBuyContainer}>
-                <TouchableOpacity
-                  activeOpacity={0.5}
-                  onPress={() => handleRatingByUser('neg')}>
-                  <View style={style.borderBtn}>
-                    <AntDesign name={'minus'} size={25} color={COLORS.tomato} />
+            {errorProductReview && <Message>{errorProductReview}</Message>}
+            {userInfo ? (
+              <View>
+                {' '}
+                <View style={style.chooseReviewContainer}>
+                  <View style={style.qtyBuyContainer}>
+                    <TouchableOpacity
+                      activeOpacity={0.5}
+                      onPress={() => handleRatingByUser('neg')}>
+                      <View style={style.borderBtn}>
+                        <AntDesign
+                          name={'minus'}
+                          size={25}
+                          color={COLORS.tomato}
+                        />
+                      </View>
+                    </TouchableOpacity>
+                    <Text style={style.qty}>{userRating}</Text>
+                    <TouchableOpacity
+                      activeOpacity={0.5}
+                      onPress={() => handleRatingByUser('pos')}>
+                      <View style={style.borderBtn}>
+                        <Ionicons
+                          name={'add'}
+                          size={25}
+                          color={COLORS.tomato}
+                        />
+                      </View>
+                    </TouchableOpacity>
                   </View>
-                </TouchableOpacity>
-                <Text style={style.qty}>{userRating}</Text>
-                <TouchableOpacity
-                  activeOpacity={0.5}
-                  onPress={() => handleRatingByUser('pos')}>
-                  <View style={style.borderBtn}>
-                    <Ionicons name={'add'} size={25} color={COLORS.tomato} />
-                  </View>
-                </TouchableOpacity>
-              </View>
 
-              <TouchableOpacity activeOpacity={0.5}>
-                <View style={style.addToCart}>
-                  <Text style={style.buyText}>Choose Rating</Text>
+                  <TouchableOpacity activeOpacity={0.5}>
+                    <View style={style.addToCart}>
+                      <Text style={style.buyText}>Choose Rating</Text>
+                    </View>
+                  </TouchableOpacity>
                 </View>
-              </TouchableOpacity>
-            </View>
-
-            <TextInput
-              placeholder={'Write you comment'}
-              placeholderTextColor={COLORS.dark}
-              underlineColorAndroid={'transparent'}
-              style={style.input}
-              multiline={true}
-              numberOfLines={3}
-              editable
-              maxLength={100}
-            />
-
-            <TouchableOpacity>
-              <View style={style.submitReviewButton}>
-                <Text style={style.submitReviewText}>Submit Review</Text>
+                <TextInput
+                  placeholder={'Write you comment'}
+                  placeholderTextColor={COLORS.dark}
+                  underlineColorAndroid={'transparent'}
+                  style={style.input}
+                  multiline={true}
+                  numberOfLines={3}
+                  editable
+                  maxLength={100}
+                  onChangeText={text => setComment(text)}
+                />
+                <TouchableOpacity
+                  activeOpacity={0.6}
+                  onPress={reviewSubmitHandler}>
+                  <View style={style.submitReviewButton}>
+                    <Text style={style.submitReviewText}>Submit Review</Text>
+                  </View>
+                </TouchableOpacity>
               </View>
-            </TouchableOpacity>
+            ) : (
+              <View>
+                <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                  <Text style={style.login}>
+                    Please Login to write a review
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
         )}
       />
@@ -268,14 +310,15 @@ const style = StyleSheet.create({
     justifyContent: 'space-between',
   },
   imageContainer: {
-    flex: 0.45,
+    height: 300,
     marginTop: 20,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  imageStyle: {
+  image: {
     resizeMode: 'contain',
-    flex: 1,
+    height: 300,
+    width: '100%',
   },
   detailsContainer: {
     backgroundColor: COLORS.light,
@@ -473,6 +516,13 @@ const style = StyleSheet.create({
     alignSelf: 'center',
     fontSize: 16,
     color: COLORS.white,
+  },
+  login: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: COLORS.tomato,
+    alignSelf: 'center',
+    marginBottom: 10,
   },
 });
 

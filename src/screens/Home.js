@@ -23,9 +23,9 @@ const Home = ({navigation, route}) => {
   const [textInput, setTextInput] = useState('');
   const [keyword, setKeyword] = useState('');
 
-  const pageNumberObject = route.params;
+  let pageNumber = route.params;
 
-  const pageNumber = (pageNumberObject && pageNumberObject.pageNumber) || 1;
+  pageNumber = pageNumber ? pageNumber : 1;
 
   const dispatch = useDispatch();
 
@@ -38,7 +38,7 @@ const Home = ({navigation, route}) => {
   }, [dispatch, pageNumber, keyword]);
 
   const handleProduct = product => {
-    navigation.navigate('Product', product);
+    navigation.navigate('Product', (id = product._id));
   };
 
   return (

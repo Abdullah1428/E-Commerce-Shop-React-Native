@@ -49,7 +49,6 @@ const style = StyleSheet.create({
     marginBottom: 20,
     padding: 15,
   },
-
   price: {
     fontSize: 15,
     fontWeight: 'bold',
