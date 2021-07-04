@@ -1,41 +1,95 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {SafeAreaView, StyleSheet, View, Text, FlatList} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import COLORS from '../utils/constants/colors';
-import PlaceOrderItem from '../components/PlaceOrderItem';
 
-import products from '../utils/constants/products';
+import PlaceOrderItem from '../components/PlaceOrderItem';
+import Message from '../components/Message';
+import Loader from '../components/Loader';
+
+import {getOrderDetails} from '../redux/actions/orderActions';
+import {
+  ORDER_PAY_RESET,
+  ORDER_DELIVER_RESET,
+} from '../redux/constants/orderConstants';
 
 const Order = ({navigation, route}) => {
-  const onPress = () => {
-    // handle on press
-  };
+  const orderID = route.params;
 
-  const history = route.params;
+  const dispatch = useDispatch();
 
-  return (
+  const userLogin = useSelector(state => state.userLogin);
+  const {userInfo} = userLogin;
+
+  const orderDetails = useSelector(state => state.orderDetails);
+  const {loading, error, order} = orderDetails;
+
+  const orderPay = useSelector(state => state.orderPay);
+  const {loading: loadingPay, success: successPay} = orderPay;
+
+  const orderDeliver = useSelector(state => state.orderDeliver);
+  const {loading: loadingDeliver, success: successDeliver} = orderDeliver;
+
+  useEffect(() => {
+    if (!userInfo) {
+      navigation.navigate('Login');
+    }
+
+    if (!order || successPay || successDeliver) {
+      dispatch({type: ORDER_PAY_RESET});
+      dispatch({type: ORDER_DELIVER_RESET});
+      dispatch(getOrderDetails(orderId));
+    }
+  }, [dispatch, orderID, successPay, order, successDeliver, userInfo]);
+
+  return loading ? (
+    <Loader />
+  ) : error ? (
+    <Message>{error}</Message>
+  ) : (
     <SafeAreaView style={style.container}>
       {history && (
         <Icon name="arrow-back" size={28} onPress={() => navigation.goBack()} />
       )}
       <View style={style.shippingAddressContainer}>
-        <Text style={style.orderID}>Order ID: 232432534353523532452352</Text>
+        <Text style={style.orderID}>Order ID: {order._id}</Text>
+        <Text style={style.title}>Name</Text>
+        <Text style={style.para}>{order.user.name}</Text>
+        <Text style={style.title}>Email</Text>
+        <Text style={style.para}>{order.user.email}</Text>
         <Text style={style.title}>Shipping Address</Text>
         <Text numberOfLines={2} style={style.para}>
-          * Address city postal code country
+          * {order.shippingAddress.address}, {order.shippingAddress.city}
+          {order.shippingAddress.postalCode},{order.shippingAddress.country}
         </Text>
-        <View style={style.deliverBlock}>
-          <Text style={style.deliverText}>Not Delivered</Text>
-        </View>
+        {order.isDelivered ? (
+          <View style={style.deliverBlockSuccess}>
+            <Text style={style.deliverText}>
+              Delivered on {order.deliveredAt}
+            </Text>
+          </View>
+        ) : (
+          <View style={style.deliverBlock}>
+            <Text style={style.deliverText}>Not Delivered</Text>
+          </View>
+        )}
       </View>
       <View style={style.paymentContainer}>
         <Text style={style.title}>Payment Method</Text>
         <Text numberOfLines={1} style={style.para}>
-          * Cash
+          * Method : {order.paymentMethod}
         </Text>
-        <View style={style.deliverBlock}>
-          <Text style={style.deliverText}>Not Paid</Text>
-        </View>
+        {order.isPaid ? (
+          <View style={style.deliverBlockSuccess}>
+            <Text style={style.deliverText}>Paid on {order.paidAt}</Text>
+          </View>
+        ) : (
+          <View style={style.deliverBlock}>
+            <Text style={style.deliverText}>Not Paid</Text>
+          </View>
+        )}
       </View>
       <View style={style.paymentContainer}>
         <Text style={style.title}>Your Order</Text>
@@ -46,7 +100,7 @@ const Order = ({navigation, route}) => {
           paddingBottom: 80,
           backgroundColor: COLORS.white,
         }}
-        data={products}
+        data={order.orderItems}
         scrollEnabled={true}
         removeClippedSubviews={true}
         onEndReachedThreshold={1}
@@ -64,19 +118,19 @@ const Order = ({navigation, route}) => {
             <Text style={style.summaryTitle}>Order Summary</Text>
             <View style={style.summary}>
               <Text style={style.summaryText}>Items</Text>
-              <Text style={style.summaryText}>$50</Text>
+              <Text style={style.summaryText}>${order.itemsPrice}</Text>
             </View>
             <View style={style.summary}>
               <Text style={style.summaryText}>Shipping</Text>
-              <Text style={style.summaryText}>$50</Text>
+              <Text style={style.summaryText}>${order.shippingPrice}</Text>
             </View>
             <View style={style.summary}>
               <Text style={style.summaryText}>Tax</Text>
-              <Text style={style.summaryText}>$50</Text>
+              <Text style={style.summaryText}>${order.taxPrice}</Text>
             </View>
             <View style={style.summary}>
               <Text style={style.summaryText}>Total</Text>
-              <Text style={style.summaryText}>$50</Text>
+              <Text style={style.summaryText}>${order.totalPrice}</Text>
             </View>
           </View>
         )}
@@ -124,6 +178,13 @@ const style = StyleSheet.create({
     width: '100%',
     borderRadius: 10,
     backgroundColor: '#d0f0c0', // #ffcccb
+    justifyContent: 'center',
+  },
+  deliverBlockSuccess: {
+    height: 50,
+    width: '100%',
+    borderRadius: 10,
+    backgroundColor: '#ffcccb', // #ffcccb
     justifyContent: 'center',
   },
   deliverText: {

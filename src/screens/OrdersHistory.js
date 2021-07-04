@@ -4,7 +4,7 @@ import COLORS from '../utils/constants/colors';
 import products from '../utils/constants/products';
 import OrderHistoryItem from '../components/OrderHistoryItem';
 
-const Cart = ({navigation}) => {
+const OrdersHistory = ({navigation}) => {
   const onPress = () => {
     navigation.navigate('Order');
   };
@@ -66,4 +66,4 @@ const style = StyleSheet.create({
   },
 });
 
-export default Cart;
+export default OrdersHistory;
