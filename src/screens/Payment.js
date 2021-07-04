@@ -1,18 +1,35 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet, View, Text} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import COLORS from '../utils/constants/colors';
+
 import {PrimaryButton} from '../components/Button';
 import CheckoutSteps from '../components/CheckoutSteps';
 
+import {savePaymentMethod} from '../redux/actions/cartActions';
+
 const Payment = ({navigation}) => {
+  const dispatch = useDispatch();
+
+  const cart = useSelector(state => state.cart);
+  const {shippingAddress} = cart;
+
+  if (!shippingAddress) {
+    navigation.navigate('Shipping');
+  }
+
+  const [paymentMethod, setPaymentMethod] = useState('Cash');
+
   const onPress = () => {
+    dispatch(savePaymentMethod(paymentMethod));
     navigation.navigate('PlaceOrder');
   };
 
   const handleNav = nav => {
-    navigation.navigate(nav);
+    navigation.navigate(nav, (redirect = 'Shipping'));
   };
 
   return (
@@ -23,7 +40,7 @@ const Payment = ({navigation}) => {
         <Text style={style.header}>Payment Method</Text>
         <View style={style.cashContainer}>
           <Fontisto name="checkbox-active" size={25} color={COLORS.dark} />
-          <Text style={style.cash}>CASH</Text>
+          <Text style={style.cash}>{paymentMethod}</Text>
         </View>
 
         <View style={{marginTop: 50}}>

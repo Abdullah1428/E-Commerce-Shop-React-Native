@@ -1,17 +1,43 @@
 import React from 'react';
-import {SafeAreaView, StyleSheet, TextInput, View, Text} from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  TextInput,
+  View,
+  Text,
+  Alert,
+} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+
 import COLORS from '../utils/constants/colors';
 import {PrimaryButton} from '../components/Button';
 import CheckoutSteps from '../components/CheckoutSteps';
 
+import {saveShippingAddress} from '../redux/actions/cartActions';
+
 const Shipping = ({navigation}) => {
+  const dispatch = useDispatch();
+
+  const cart = useSelector(state => state.cart);
+  const {shippingAddress} = cart;
+
+  const [address, setAddress] = useState(shippingAddress.address);
+  const [city, setCity] = useState(shippingAddress.city);
+  const [postalCode, setPostalCode] = useState(shippingAddress.postalCode);
+  const [country, setCountry] = useState(shippingAddress.country);
+
   const onPress = () => {
+    if (address === '' || city === '' || postalCode === '' || country === '') {
+      Alert.alert('Empty Fields', 'Fields are empty!');
+      return;
+    }
+    dispatch(saveShippingAddress({address, city, postalCode, country}));
     navigation.navigate('Payment');
   };
 
   const handleNav = nav => {
-    navigation.navigate(nav);
+    navigation.navigate(nav, (redirect = 'Shipping'));
   };
 
   return (
@@ -27,6 +53,8 @@ const Shipping = ({navigation}) => {
             placeholder={'Address'}
             placeholderTextColor={COLORS.dark}
             underlineColorAndroid={'transparent'}
+            value={address}
+            onChangeText={value => setAddress(value)}
           />
 
           <TextInput
@@ -34,6 +62,8 @@ const Shipping = ({navigation}) => {
             placeholder={'City'}
             placeholderTextColor={COLORS.dark}
             underlineColorAndroid={'transparent'}
+            value={city}
+            onChangeText={value => setCity(value)}
           />
 
           <TextInput
@@ -41,6 +71,8 @@ const Shipping = ({navigation}) => {
             placeholder={'Postal Code'}
             placeholderTextColor={COLORS.dark}
             underlineColorAndroid={'transparent'}
+            value={postalCode}
+            onChangeText={value => setPostalCode(value)}
           />
 
           <TextInput
@@ -48,6 +80,8 @@ const Shipping = ({navigation}) => {
             placeholder={'Country'}
             placeholderTextColor={COLORS.dark}
             underlineColorAndroid={'transparent'}
+            value={country}
+            onChangeText={value => setCountry(value)}
           />
 
           <View style={{marginTop: 20}}>
