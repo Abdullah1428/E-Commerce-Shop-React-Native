@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {LOCAL_SERVER_URL} from '@env';
 import {
   View,
@@ -11,9 +11,8 @@ import {
   SafeAreaView,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-
+import {Picker} from '@react-native-picker/picker';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import COLORS from '../utils/constants/colors';
@@ -31,7 +30,17 @@ import {PRODUCT_CREATE_REVIEW_RESET} from '../redux/constants/productConstants';
 const Product = ({navigation, route}) => {
   const id = route.params;
 
-  const [qty, setqty] = useState(1);
+  const pickerRef = useRef();
+
+  function open() {
+    pickerRef.current.focus();
+  }
+
+  function close() {
+    pickerRef.current.blur();
+  }
+
+  const [qty, setQty] = useState(1);
   const [userRating, setUserRating] = useState(1);
   const [comment, setComment] = useState('');
 
@@ -50,12 +59,6 @@ const Product = ({navigation, route}) => {
   } = productReviewCreate;
 
   useEffect(() => {
-    /*
-    if (!userInfo) {
-      history.push('/login')
-    }
-    */
-
     if (successProductReview) {
       setUserRating(1);
       setComment('');
@@ -63,28 +66,6 @@ const Product = ({navigation, route}) => {
     }
     dispatch(listProductDetails(id));
   }, [dispatch, successProductReview, userInfo, id]);
-
-  const handleQty = param => {
-    if (param === 'neg') {
-      if (qty !== 1) {
-        setqty(qty - 1);
-      }
-    } else if (param === 'pos') {
-      setqty(qty + 1);
-    }
-  };
-
-  const handleRatingByUser = param => {
-    if (param === 'neg') {
-      if (userRating !== 1) {
-        setUserRating(userRating - 1);
-      }
-    } else if (param === 'pos') {
-      if (userRating !== 5) {
-        setUserRating(userRating + 1);
-      }
-    }
-  };
 
   const addToCartHandler = () => {
     dispatch(addToCart(id, qty));
@@ -179,31 +160,28 @@ const Product = ({navigation, route}) => {
               </View>
               {product.countInStock > 0 ? (
                 <View style={style.qtyBuy}>
-                  <View style={style.qtyBuyContainer}>
-                    <TouchableOpacity
-                      activeOpacity={0.5}
-                      onPress={() => handleQty('neg')}>
-                      <View style={style.borderBtn}>
-                        <AntDesign
-                          name={'minus'}
-                          size={25}
-                          color={COLORS.tomato}
-                        />
-                      </View>
-                    </TouchableOpacity>
-                    <Text style={style.qty}>{qty}</Text>
-                    <TouchableOpacity
-                      activeOpacity={0.5}
-                      onPress={() => handleQty('pos')}>
-                      <View style={style.borderBtn}>
-                        <Ionicons
-                          name={'add'}
-                          size={25}
-                          color={COLORS.tomato}
-                        />
-                      </View>
-                    </TouchableOpacity>
-                  </View>
+                  <Text
+                    style={{
+                      alignSelf: 'center',
+                      fontSize: 20,
+                      fontWeight: 'bold',
+                    }}>
+                    Quantity
+                  </Text>
+                  <Picker
+                    style={style.picker}
+                    mode="dropdown"
+                    ref={pickerRef}
+                    selectedValue={qty}
+                    onValueChange={(itemValue, itemIndex) => setQty(itemValue)}>
+                    {[...Array(product.countInStock).keys()].map(x => (
+                      <Picker.Item
+                        label={`${x + 1}`}
+                        key={x + 1}
+                        value={x + 1}
+                      />
+                    ))}
+                  </Picker>
 
                   <TouchableOpacity
                     activeOpacity={0.5}
@@ -236,33 +214,21 @@ const Product = ({navigation, route}) => {
             {errorProductReview && <Message>{errorProductReview}</Message>}
             {userInfo ? (
               <View>
-                {' '}
                 <View style={style.chooseReviewContainer}>
-                  <View style={style.qtyBuyContainer}>
-                    <TouchableOpacity
-                      activeOpacity={0.5}
-                      onPress={() => handleRatingByUser('neg')}>
-                      <View style={style.borderBtn}>
-                        <AntDesign
-                          name={'minus'}
-                          size={25}
-                          color={COLORS.tomato}
-                        />
-                      </View>
-                    </TouchableOpacity>
-                    <Text style={style.qty}>{userRating}</Text>
-                    <TouchableOpacity
-                      activeOpacity={0.5}
-                      onPress={() => handleRatingByUser('pos')}>
-                      <View style={style.borderBtn}>
-                        <Ionicons
-                          name={'add'}
-                          size={25}
-                          color={COLORS.tomato}
-                        />
-                      </View>
-                    </TouchableOpacity>
-                  </View>
+                  <Picker
+                    style={style.pickerRating}
+                    mode="dropdown"
+                    ref={pickerRef}
+                    selectedValue={userRating}
+                    onValueChange={(itemValue, itemIndex) =>
+                      setUserRating(itemValue)
+                    }>
+                    <Picker.Item label={'1 - Poor'} value={1} />
+                    <Picker.Item label={'2 - Fair'} value={2} />
+                    <Picker.Item label={'3 - Good'} value={3} />
+                    <Picker.Item label={'4 - Very Good'} value={4} />
+                    <Picker.Item label={'5 - Excellent'} value={5} />
+                  </Picker>
 
                   <TouchableOpacity activeOpacity={0.5}>
                     <View style={style.addToCart}>
@@ -271,7 +237,7 @@ const Product = ({navigation, route}) => {
                   </TouchableOpacity>
                 </View>
                 <TextInput
-                  placeholder={'Write you comment'}
+                  placeholder={'Write your review comment'}
                   placeholderTextColor={COLORS.dark}
                   underlineColorAndroid={'transparent'}
                   style={style.input}
@@ -530,6 +496,16 @@ const style = StyleSheet.create({
     color: COLORS.tomato,
     alignSelf: 'center',
     marginBottom: 10,
+  },
+  picker: {
+    color: 'black',
+    height: 40,
+    width: '40%',
+  },
+  pickerRating: {
+    color: 'black',
+    height: 40,
+    width: '60%',
   },
 });
 
