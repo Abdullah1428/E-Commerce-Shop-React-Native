@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -7,12 +7,46 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+
+import Message from '../components/Message';
+import Loader from '../components/Loader';
+
+import {login} from '../redux/actions/userActions';
 
 import COLORS from '../utils/constants/colors';
 
-const Login = ({navigation}) => {
+const Login = ({navigation, route}) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const dispatch = useDispatch();
+
+  const userLogin = useSelector(state => state.userLogin);
+
+  const {loading, error, userInfo} = userLogin;
+
+  const redirect = route.params;
+
+  useEffect(() => {
+    if (userInfo) {
+      if (redirect) {
+        navigation.navigate(redirect);
+      }
+    }
+  }, [userInfo, redirect]);
+
+  const loginUser = () => {
+    if (email === '' || password === '') {
+      Alert.alert('Empty Fields', 'Fields are empty!');
+      return;
+    }
+    dispatch(login(email, password));
+  };
+
   return (
     <SafeAreaView style={style.container}>
+      {error && <Message>{error}</Message>}
       <View style={style.registerForm}>
         <Text style={style.appTitle}>FOOD KING</Text>
 
@@ -23,6 +57,8 @@ const Login = ({navigation}) => {
           placeholder={'Email'}
           placeholderTextColor={COLORS.white}
           underlineColorAndroid={'transparent'}
+          value={email}
+          onChangeText={value => setEmail(value)}
         />
 
         <TextInput
@@ -31,13 +67,18 @@ const Login = ({navigation}) => {
           secureTextEntry={true}
           placeholderTextColor={COLORS.white}
           underlineColorAndroid={'transparent'}
+          value={password}
+          onChangeText={value => setPassword(value)}
         />
 
-        <TouchableOpacity style={style.button}>
+        {loading && <Loader />}
+
+        <TouchableOpacity style={style.button} onPress={loginUser}>
           <Text style={style.buttonText}>Sign In</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Signup', (redirect = redirect))}>
           <Text style={style.already}>Don't have an accout? Sign Up</Text>
         </TouchableOpacity>
       </View>
@@ -48,7 +89,7 @@ const Login = ({navigation}) => {
 const style = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.tomato,
+    backgroundColor: COLORS.primary,
     justifyContent: 'center',
     paddingLeft: 60,
     paddingRight: 60,

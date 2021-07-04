@@ -6,7 +6,12 @@ import {Picker} from '@react-native-picker/picker';
 
 import COLORS from '../utils/constants/colors';
 
-const CartItem = ({item, addToCartHandler, removeFromCartHandler}) => {
+const CartItem = ({
+  item,
+  addToCartHandler,
+  removeFromCartHandler,
+  handleProduct,
+}) => {
   const pickerRef = useRef();
 
   function open() {
@@ -27,16 +32,24 @@ const CartItem = ({item, addToCartHandler, removeFromCartHandler}) => {
   return (
     <View style={style.mainContainer}>
       <View style={style.container}>
-        <Image
-          source={{uri: `${LOCAL_SERVER_URL}${item.image}`}}
-          style={style.imageStyle}
-        />
+        <TouchableOpacity
+          activeOpacity={0.6}
+          onPress={() => handleProduct(item.product)}>
+          <Image
+            source={{uri: `${LOCAL_SERVER_URL}${item.image}`}}
+            style={style.imageStyle}
+          />
+        </TouchableOpacity>
         <View
           style={{flexDirection: 'column', justifyContent: 'space-between'}}>
           <View style={style.detailsContainer}>
-            <Text numberOfLines={2} style={style.name}>
-              {item.name}
-            </Text>
+            <TouchableOpacity
+              activeOpacity={0.6}
+              onPress={() => handleProduct(item.product)}>
+              <Text numberOfLines={2} style={style.name}>
+                {item.name}
+              </Text>
+            </TouchableOpacity>
             <Text style={style.price}>${item.price}</Text>
           </View>
           <View style={{flexDirection: 'row'}}>

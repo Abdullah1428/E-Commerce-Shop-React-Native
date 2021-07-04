@@ -17,7 +17,7 @@ const Cart = ({navigation}) => {
   const {cartItems} = cart;
 
   const onPress = () => {
-    navigation.navigate('Shipping');
+    navigation.navigate('Login', (redirect = 'Shipping'));
   };
 
   const removeFromCartHandler = id => {
@@ -26,6 +26,10 @@ const Cart = ({navigation}) => {
 
   const addToCartHandler = (value, id) => {
     dispatch(addToCart(id, Number(value)));
+  };
+
+  const handleProduct = id => {
+    navigation.navigate('CartProduct', (id = id));
   };
 
   return (
@@ -55,6 +59,7 @@ const Cart = ({navigation}) => {
               item={item}
               addToCartHandler={addToCartHandler}
               removeFromCartHandler={removeFromCartHandler}
+              handleProduct={handleProduct}
             />
           )}
           ListFooterComponentStyle={{paddingHorizontal: 20, marginTop: 20}}

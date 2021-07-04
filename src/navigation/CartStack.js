@@ -7,6 +7,7 @@ import PlaceOrder from '../screens/PlaceOrder';
 import Order from '../screens/Order';
 import Signup from '../screens/Signup';
 import Login from '../screens/Login';
+import Product from '../screens/Product';
 
 const Stack = createStackNavigator();
 
@@ -16,6 +17,7 @@ export const CartStack = () => {
       screenOptions={{header: () => null}}
       initialRouteName="Cart">
       <Stack.Screen name="Cart" component={Cart} />
+      <Stack.Screen name="CartProduct" component={Product} />
       <Stack.Screen name="Shipping" component={Shipping} />
       <Stack.Screen name="Payment" component={Payment} />
       <Stack.Screen name="PlaceOrder" component={PlaceOrder} />
