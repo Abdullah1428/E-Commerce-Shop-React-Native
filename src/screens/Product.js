@@ -25,6 +25,7 @@ import {
   listProductDetails,
   createProductReview,
 } from '../redux/actions/productActions';
+import {addToCart} from '../redux/actions/cartActions';
 import {PRODUCT_CREATE_REVIEW_RESET} from '../redux/constants/productConstants';
 
 const Product = ({navigation, route}) => {
@@ -83,6 +84,10 @@ const Product = ({navigation, route}) => {
         setUserRating(userRating + 1);
       }
     }
+  };
+
+  const addToCartHandler = () => {
+    dispatch(addToCart(id, qty));
   };
 
   const reviewSubmitHandler = () => {
@@ -200,7 +205,9 @@ const Product = ({navigation, route}) => {
                     </TouchableOpacity>
                   </View>
 
-                  <TouchableOpacity activeOpacity={0.5}>
+                  <TouchableOpacity
+                    activeOpacity={0.5}
+                    onPress={addToCartHandler}>
                     <View style={style.addToCart}>
                       <Text style={style.buyText}>Add to Cart</Text>
                     </View>

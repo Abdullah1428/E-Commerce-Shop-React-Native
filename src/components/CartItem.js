@@ -1,40 +1,79 @@
-import React from 'react';
+import React, {useState, useRef} from 'react';
+import {LOCAL_SERVER_URL} from '@env';
 import {StyleSheet, View, Image, Text, TouchableOpacity} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/Ionicons';
+import {Picker} from '@react-native-picker/picker';
 
 import COLORS from '../utils/constants/colors';
 
-const CartItem = ({item, qty, handleQty}) => {
+const CartItem = ({item, addToCartHandler, removeFromCartHandler}) => {
+  const pickerRef = useRef();
+
+  function open() {
+    pickerRef.current.focus();
+  }
+
+  function close() {
+    pickerRef.current.blur();
+  }
+
+  const [selectedQty, setSelectedQty] = useState(item.qty);
+
+  const handleValueChange = value => {
+    setSelectedQty(value);
+    addToCartHandler(value, item.product);
+  };
+
   return (
-    <View style={style.container}>
-      <Image source={item.image} style={style.imageStyle} />
-      <View style={style.detailsContainer}>
-        <Text numberOfLines={2} style={style.name}>
-          {item.name}
-        </Text>
-        <Text style={style.category}>{item.category}</Text>
-        <Text style={style.price}>${item.price}</Text>
-      </View>
-      <View style={style.qtyCon}>
-        <Text style={style.qty}>{qty}</Text>
-        <View style={style.actionBtn}>
-          <TouchableOpacity
-            onPress={() => handleQty('neg')}
-            style={{justifyContent: 'center'}}>
-            <Icon name="remove" size={25} color={COLORS.white} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => handleQty('pos')}
-            style={{justifyContent: 'center'}}>
-            <Icon name="add" size={25} color={COLORS.white} />
-          </TouchableOpacity>
+    <View style={style.mainContainer}>
+      <View style={style.container}>
+        <Image
+          source={{uri: `${LOCAL_SERVER_URL}${item.image}`}}
+          style={style.imageStyle}
+        />
+        <View
+          style={{flexDirection: 'column', justifyContent: 'space-between'}}>
+          <View style={style.detailsContainer}>
+            <Text numberOfLines={2} style={style.name}>
+              {item.name}
+            </Text>
+            <Text style={style.price}>${item.price}</Text>
+          </View>
+          <View>
+            <Picker
+              style={style.picker}
+              mode="dropdown"
+              ref={pickerRef}
+              selectedValue={selectedQty}
+              onValueChange={(itemValue, itemIndex) =>
+                handleValueChange(itemValue)
+              }>
+              {[...Array(item.countInStock).keys()].map(x => (
+                <Picker.Item label={`${x + 1}`} key={x + 1} value={x + 1} />
+              ))}
+            </Picker>
+          </View>
         </View>
+      </View>
+      <View style={{justifyContent: 'center'}}>
+        <TouchableOpacity onPress={() => removeFromCartHandler(item.product)}>
+          <Icon
+            name={'trash-outline'}
+            size={30}
+            color={COLORS.red}
+            style={{alignSelf: 'center', marginRight: 10}}
+          />
+        </TouchableOpacity>
       </View>
     </View>
   );
 };
 
 const style = StyleSheet.create({
+  mainContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
   container: {
     height: 100,
     elevation: 15,
@@ -45,6 +84,7 @@ const style = StyleSheet.create({
     paddingHorizontal: 10,
     flexDirection: 'row',
     alignItems: 'center',
+    width: '85%',
   },
   imageStyle: {
     height: 80,
@@ -55,12 +95,13 @@ const style = StyleSheet.create({
     marginLeft: 10,
     paddingVertical: 10,
     flex: 1,
-    flexDirection: 'column',
+    flexDirection: 'row',
     justifyContent: 'space-between',
   },
   name: {
     fontWeight: 'bold',
     fontSize: 12,
+    width: '60%',
   },
   category: {
     fontSize: 13,
@@ -79,16 +120,10 @@ const style = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
   },
-  actionBtn: {
-    marginTop: 10,
-    width: 80,
-    height: 30,
-    backgroundColor: COLORS.primary,
-    borderRadius: 30,
-    paddingHorizontal: 5,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignContent: 'center',
+  picker: {
+    color: 'black',
+    height: 40,
+    width: '40%',
   },
 });
 

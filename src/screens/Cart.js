@@ -1,66 +1,84 @@
 import React, {useState} from 'react';
 import {SafeAreaView, StyleSheet, View, Text, FlatList} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+
 import COLORS from '../utils/constants/colors';
-import products from '../utils/constants/products';
 import CartItem from '../components/CartItem';
+import Message from '../components/Message';
 import {PrimaryButton} from '../components/Button';
 
+import {addToCart, removeFromCart} from '../redux/actions/cartActions';
+
 const Cart = ({navigation}) => {
+  const dispatch = useDispatch();
+
+  const cart = useSelector(state => state.cart);
+
+  const {cartItems} = cart;
+
   const onPress = () => {
     navigation.navigate('Shipping');
   };
 
-  const [qty, setqty] = useState(1);
+  const removeFromCartHandler = id => {
+    dispatch(removeFromCart(id));
+  };
 
-  const handleQty = param => {
-    if (param === 'neg') {
-      if (qty !== 0) {
-        setqty(qty - 1);
-      }
-    } else if (param === 'pos') {
-      setqty(qty + 1);
-    }
+  const addToCartHandler = (value, id) => {
+    dispatch(addToCart(id, Number(value)));
   };
 
   return (
     <SafeAreaView style={style.container}>
       <View style={style.header}>
-        <Text style={style.title}>Cart</Text>
+        <Text style={style.title}>Shopping Cart</Text>
       </View>
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: 80}}
-        data={products}
-        scrollEnabled={true}
-        removeClippedSubviews={true}
-        onEndReachedThreshold={1}
-        scrollEventThrottle={250}
-        maxToRenderPerBatch={10}
-        updateCellsBatchingPeriod={200}
-        initialNumToRender={10}
-        snapToAlignment="center"
-        decelerationRate={'fast'}
-        keyExtractor={(_, index) => index.toString()}
-        renderItem={({item}) => (
-          <CartItem item={item} qty={qty} handleQty={handleQty} />
-        )}
-        ListFooterComponentStyle={{paddingHorizontal: 20, marginTop: 20}}
-        ListFooterComponent={() => (
-          <View>
-            <View style={style.summary}>
-              <Text style={style.summaryText}>Subtotal Items</Text>
-              <Text style={style.summaryText}>$50</Text>
+      {cartItems.length === 0 ? (
+        <Message>Your Cart is Empty</Message>
+      ) : (
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{paddingBottom: 80}}
+          data={cartItems}
+          scrollEnabled={true}
+          removeClippedSubviews={true}
+          onEndReachedThreshold={1}
+          scrollEventThrottle={250}
+          maxToRenderPerBatch={10}
+          updateCellsBatchingPeriod={200}
+          initialNumToRender={10}
+          snapToAlignment="center"
+          decelerationRate={'fast'}
+          keyExtractor={(_, index) => index.toString()}
+          renderItem={({item}) => (
+            <CartItem
+              item={item}
+              addToCartHandler={addToCartHandler}
+              removeFromCartHandler={removeFromCartHandler}
+            />
+          )}
+          ListFooterComponentStyle={{paddingHorizontal: 20, marginTop: 20}}
+          ListFooterComponent={() => (
+            <View>
+              <View style={style.summary}>
+                <Text style={style.summaryText}>
+                  Subtotal ({cartItems.reduce((acc, item) => acc + item.qty, 0)}
+                  ) Items
+                </Text>
+                <Text style={style.summaryText}>
+                  $
+                  {cartItems
+                    .reduce((acc, item) => acc + item.qty * item.price, 0)
+                    .toFixed(2)}
+                </Text>
+              </View>
+              <View style={{marginTop: 20}}>
+                <PrimaryButton title="Proceed to Checkout" onPress={onPress} />
+              </View>
             </View>
-            <View style={style.summary}>
-              <Text style={style.summaryText}>Total Price</Text>
-              <Text style={style.summaryText}>$50</Text>
-            </View>
-            <View style={{marginTop: 20}}>
-              <PrimaryButton title="Proceed to Checkout" onPress={onPress} />
-            </View>
-          </View>
-        )}
-      />
+          )}
+        />
+      )}
     </SafeAreaView>
   );
 };
