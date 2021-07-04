@@ -1,20 +1,63 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet, View, Text, FlatList} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import COLORS from '../utils/constants/colors';
+
 import {PrimaryButton} from '../components/Button';
 import CheckoutSteps from '../components/CheckoutSteps';
 import PlaceOrderItem from '../components/PlaceOrderItem';
+import Message from '../components/Message';
 
-import products from '../utils/constants/products';
+import {createOrder} from '../redux/actions/orderActions';
 
 const PlaceOrder = ({navigation}) => {
+  const dispatch = useDispatch();
+
+  const cart = useSelector(state => state.cart);
+
+  const addDecimals = num => {
+    return (Math.round(num * 100) / 100).toFixed(2);
+  };
+
+  // calc prices
+  cart.itemsPrice = addDecimals(
+    cart.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0),
+  );
+  cart.shippingPrice = addDecimals(cart.itemsPrice > 100 ? 0 : 5);
+  cart.taxPrice = addDecimals(Number((0.07 * cart.itemsPrice).toFixed(2)));
+  cart.totalPrice = (
+    Number(cart.itemsPrice) +
+    Number(cart.shippingPrice) +
+    Number(cart.taxPrice)
+  ).toFixed(2);
+
+  const orderCreate = useSelector(state => state.orderCreate);
+  const {order, success, error} = orderCreate;
+
+  useEffect(() => {
+    if (success) {
+      navigation.navigate('Order', (orderID = order._id));
+    }
+  }, [success]);
+
   const onPress = () => {
-    navigation.navigate('Order');
+    dispatch(
+      createOrder({
+        orderItems: cart.cartItems,
+        shippingAddress: cart.shippingAddress,
+        paymentMethod: cart.paymentMethod,
+        itemsPrice: cart.itemsPrice,
+        shippingPrice: cart.shippingPrice,
+        taxPrice: cart.taxPrice,
+        totalPrice: cart.totalPrice,
+      }),
+    );
   };
 
   const handleNav = nav => {
-    navigation.navigate(nav);
+    navigation.navigate(nav, (redirect = 'Shipping'));
   };
 
   return (
@@ -24,17 +67,18 @@ const PlaceOrder = ({navigation}) => {
       <View style={style.shippingAddressContainer}>
         <Text style={style.title}>Shipping Address</Text>
         <Text numberOfLines={2} style={style.para}>
-          * Address city postal code country
+          * {cart.shippingAddress.address}, {cart.shippingAddress.city}
+          {cart.shippingAddress.postalCode},{cart.shippingAddress.country}
         </Text>
       </View>
       <View style={style.paymentContainer}>
         <Text style={style.title}>Payment Method</Text>
         <Text numberOfLines={1} style={style.para}>
-          * Cash
+          * {cart.paymentMethod}
         </Text>
       </View>
       <View style={style.paymentContainer}>
-        <Text style={style.title}>Your Order</Text>
+        <Text style={style.title}>Your Order Items</Text>
       </View>
       <FlatList
         showsVerticalScrollIndicator={false}
@@ -42,7 +86,7 @@ const PlaceOrder = ({navigation}) => {
           paddingBottom: 80,
           backgroundColor: COLORS.white,
         }}
-        data={products}
+        data={cart.cartItems}
         scrollEnabled={true}
         removeClippedSubviews={true}
         onEndReachedThreshold={1}
@@ -60,22 +104,27 @@ const PlaceOrder = ({navigation}) => {
             <Text style={style.summaryTitle}>Order Summary</Text>
             <View style={style.summary}>
               <Text style={style.summaryText}>Items</Text>
-              <Text style={style.summaryText}>$50</Text>
+              <Text style={style.summaryText}>${cart.itemsPrice}</Text>
             </View>
             <View style={style.summary}>
               <Text style={style.summaryText}>Shipping</Text>
-              <Text style={style.summaryText}>$50</Text>
+              <Text style={style.summaryText}>${cart.shippingPrice}</Text>
             </View>
             <View style={style.summary}>
               <Text style={style.summaryText}>Tax</Text>
-              <Text style={style.summaryText}>$50</Text>
+              <Text style={style.summaryText}>${cart.taxPrice}</Text>
             </View>
             <View style={style.summary}>
               <Text style={style.summaryText}>Total</Text>
-              <Text style={style.summaryText}>$50</Text>
+              <Text style={style.summaryText}>${cart.totalPrice}</Text>
             </View>
+            {error && <Message>{error}</Message>}
             <View style={{marginHorizontal: 30}}>
-              <PrimaryButton title="Place Order" onPress={onPress} />
+              <PrimaryButton
+                title="Place Order"
+                onPress={onPress}
+                disabled={cart.cartItems.length === 0}
+              />
             </View>
           </View>
         )}

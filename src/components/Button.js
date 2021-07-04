@@ -2,18 +2,24 @@ import React from 'react';
 import {StyleSheet, TouchableOpacity, View, Text} from 'react-native';
 import COLORS from '../utils/constants/colors';
 
-const PrimaryButton = ({title, onPress}) => {
+const PrimaryButton = ({title, onPress, disabled}) => {
   return (
-    <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
+    <TouchableOpacity
+      disabled={disabled ? disabled : false}
+      activeOpacity={0.8}
+      onPress={onPress}>
       <View style={style.btnContainer}>
         <Text style={style.title}>{title}</Text>
       </View>
     </TouchableOpacity>
   );
 };
-const SecondaryButton = ({title, onPress}) => {
+const SecondaryButton = ({title, onPress, disabled}) => {
   return (
-    <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
+    <TouchableOpacity
+      disabled={disabled ? disabled : false}
+      activeOpacity={0.8}
+      onPress={onPress}>
       <View style={{...style.btnContainer, backgroundColor: COLORS.white}}>
         <Text style={{...style.title, color: COLORS.primary}}>{title}</Text>
       </View>

@@ -5,13 +5,17 @@ import COLORS from '../utils/constants/colors';
 const PlaceOrderItem = ({item}) => {
   return (
     <View style={style.container}>
-      <Image source={item.image} style={style.imageStyle} />
+      <Image
+        source={{uri: `${LOCAL_SERVER_URL}${item.image}`}}
+        style={style.imageStyle}
+      />
       <View style={style.detailsContainer}>
         <Text numberOfLines={2} style={style.name}>
           {item.name}
         </Text>
-        <Text style={style.category}>{item.category}</Text>
-        <Text style={style.price}>${item.price}</Text>
+        <Text style={style.price}>
+          {item.qty} x ${item.price} = ${item.qty * item.price}
+        </Text>
       </View>
     </View>
   );
