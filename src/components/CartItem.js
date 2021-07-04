@@ -39,7 +39,16 @@ const CartItem = ({item, addToCartHandler, removeFromCartHandler}) => {
             </Text>
             <Text style={style.price}>${item.price}</Text>
           </View>
-          <View>
+          <View style={{flexDirection: 'row'}}>
+            <Text
+              style={{
+                alignSelf: 'center',
+                fontSize: 15,
+                fontWeight: 'bold',
+                marginLeft: 10,
+              }}>
+              Quantity
+            </Text>
             <Picker
               style={style.picker}
               mode="dropdown"
@@ -93,7 +102,7 @@ const style = StyleSheet.create({
   detailsContainer: {
     height: 100,
     marginLeft: 10,
-    paddingVertical: 10,
+    marginTop: 10,
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
