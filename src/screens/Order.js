@@ -50,50 +50,10 @@ const Order = ({navigation, route}) => {
     <Message>{error}</Message>
   ) : (
     <SafeAreaView style={style.container}>
-      {history && (
+      {true && (
         <Icon name="arrow-back" size={28} onPress={() => navigation.goBack()} />
       )}
-      <View style={style.shippingAddressContainer}>
-        <Text style={style.orderID}>Order ID: {order._id}</Text>
-        <Text style={style.title}>Name</Text>
-        <Text style={style.para}>{order.user.name}</Text>
-        <Text style={style.title}>Email</Text>
-        <Text style={style.para}>{order.user.email}</Text>
-        <Text style={style.title}>Shipping Address</Text>
-        <Text numberOfLines={2} style={style.para}>
-          * {order.shippingAddress.address}, {order.shippingAddress.city}
-          {order.shippingAddress.postalCode},{order.shippingAddress.country}
-        </Text>
-        {order.isDelivered ? (
-          <View style={style.deliverBlockSuccess}>
-            <Text style={style.deliverText}>
-              Delivered on {order.deliveredAt}
-            </Text>
-          </View>
-        ) : (
-          <View style={style.deliverBlock}>
-            <Text style={style.deliverText}>Not Delivered</Text>
-          </View>
-        )}
-      </View>
-      <View style={style.paymentContainer}>
-        <Text style={style.title}>Payment Method</Text>
-        <Text numberOfLines={1} style={style.para}>
-          * Method : {order.paymentMethod}
-        </Text>
-        {order.isPaid ? (
-          <View style={style.deliverBlockSuccess}>
-            <Text style={style.deliverText}>Paid on {order.paidAt}</Text>
-          </View>
-        ) : (
-          <View style={style.deliverBlock}>
-            <Text style={style.deliverText}>Not Paid</Text>
-          </View>
-        )}
-      </View>
-      <View style={style.paymentContainer}>
-        <Text style={style.title}>Your Order</Text>
-      </View>
+
       <FlatList
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
@@ -131,6 +91,52 @@ const Order = ({navigation, route}) => {
             <View style={style.summary}>
               <Text style={style.summaryText}>Total</Text>
               <Text style={style.summaryText}>${order.totalPrice}</Text>
+            </View>
+          </View>
+        )}
+        ListHeaderComponent={() => (
+          <View>
+            <View style={style.shippingAddressContainer}>
+              <Text style={style.orderID}>Order ID: {order._id}</Text>
+              <Text style={style.title}>Name</Text>
+              <Text style={style.para}>* {order.user.name}</Text>
+              <Text style={style.title}>Email</Text>
+              <Text style={style.para}>* {order.user.email}</Text>
+              <Text style={style.title}>Shipping Address</Text>
+              <Text numberOfLines={2} style={style.para}>
+                * {order.shippingAddress.address}, {order.shippingAddress.city},{' '}
+                {order.shippingAddress.postalCode},{' '}
+                {order.shippingAddress.country}
+              </Text>
+              {order.isDelivered ? (
+                <View style={style.deliverBlockSuccess}>
+                  <Text style={style.deliverText}>
+                    Delivered on {order.deliveredAt}
+                  </Text>
+                </View>
+              ) : (
+                <View style={style.deliverBlock}>
+                  <Text style={style.deliverText}>Not Delivered</Text>
+                </View>
+              )}
+            </View>
+            <View style={style.paymentContainer}>
+              <Text style={style.title}>Payment Method</Text>
+              <Text numberOfLines={1} style={style.para}>
+                * Method : {order.paymentMethod}
+              </Text>
+              {order.isPaid ? (
+                <View style={style.deliverBlockSuccess}>
+                  <Text style={style.deliverText}>Paid on {order.paidAt}</Text>
+                </View>
+              ) : (
+                <View style={style.deliverBlock}>
+                  <Text style={style.deliverText}>Not Paid</Text>
+                </View>
+              )}
+            </View>
+            <View style={style.paymentContainer}>
+              <Text style={style.title}>Your Order</Text>
             </View>
           </View>
         )}
@@ -177,14 +183,14 @@ const style = StyleSheet.create({
     height: 50,
     width: '100%',
     borderRadius: 10,
-    backgroundColor: '#d0f0c0', // #ffcccb
+    backgroundColor: '#ffcccb', // #ffcccb
     justifyContent: 'center',
   },
   deliverBlockSuccess: {
     height: 50,
     width: '100%',
     borderRadius: 10,
-    backgroundColor: '#ffcccb', // #ffcccb
+    backgroundColor: '#d0f0c0', // #ffcccb
     justifyContent: 'center',
   },
   deliverText: {

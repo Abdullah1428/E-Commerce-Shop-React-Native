@@ -70,22 +70,6 @@ const PlaceOrder = ({navigation}) => {
     <SafeAreaView style={style.container}>
       <Icon name="arrow-back" size={28} onPress={() => navigation.goBack()} />
       <CheckoutSteps step1 step2 step3 step4 handleNav={handleNav} />
-      <View style={style.shippingAddressContainer}>
-        <Text style={style.title}>Shipping Address</Text>
-        <Text numberOfLines={2} style={style.para}>
-          * {cart.shippingAddress.address}, {cart.shippingAddress.city},{' '}
-          {cart.shippingAddress.postalCode}, {cart.shippingAddress.country}
-        </Text>
-      </View>
-      <View style={style.paymentContainer}>
-        <Text style={style.title}>Payment Method</Text>
-        <Text numberOfLines={1} style={style.para}>
-          * {cart.paymentMethod}
-        </Text>
-      </View>
-      <View style={style.paymentContainer}>
-        <Text style={style.title}>Your Order Items</Text>
-      </View>
       <FlatList
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
@@ -132,6 +116,27 @@ const PlaceOrder = ({navigation}) => {
                 onPress={onPress}
                 disabled={cart.cartItems.length === 0}
               />
+            </View>
+          </View>
+        )}
+        ListHeaderComponent={() => (
+          <View>
+            <View style={style.shippingAddressContainer}>
+              <Text style={style.title}>Shipping Address</Text>
+              <Text numberOfLines={2} style={style.para}>
+                * {cart.shippingAddress.address}, {cart.shippingAddress.city},{' '}
+                {cart.shippingAddress.postalCode},{' '}
+                {cart.shippingAddress.country}
+              </Text>
+            </View>
+            <View style={style.paymentContainer}>
+              <Text style={style.title}>Payment Method</Text>
+              <Text numberOfLines={1} style={style.para}>
+                * {cart.paymentMethod}
+              </Text>
+            </View>
+            <View style={style.paymentContainer}>
+              <Text style={style.title}>Your Order Items</Text>
             </View>
           </View>
         )}

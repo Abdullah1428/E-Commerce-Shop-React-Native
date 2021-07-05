@@ -48,7 +48,7 @@ const Profile = ({navigation}) => {
     }
 
     if (error) {
-      Alert.alert('Error', 'Error while getting user details');
+      Alert.alert('Error', error);
     }
   }, [success, error]);
 
@@ -92,7 +92,8 @@ const Profile = ({navigation}) => {
         <Text style={style.titleNoLogin}>
           Don't have an account? Sign Up / Sign In
         </Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Login', (redirect = 'Profile'))}>
           <View style={style.viewNoLogin}>
             <Text style={style.textNoLogin}>SIGN UP/ SIGN IN</Text>
           </View>

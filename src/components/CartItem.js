@@ -133,6 +133,8 @@ const style = StyleSheet.create({
     fontSize: 13,
     fontWeight: 'bold',
     color: COLORS.tomato,
+    position: 'absolute',
+    marginLeft: 190,
   },
   qtyCon: {
     marginRight: 20,
