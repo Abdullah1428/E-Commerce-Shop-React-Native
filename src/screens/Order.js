@@ -39,7 +39,7 @@ const Order = ({navigation, route}) => {
 
   useEffect(() => {
     dispatch(getOrderDetails(orderID));
-  }, []);
+  }, [dispatch, orderID]);
 
   return loading ? (
     <Loader />
