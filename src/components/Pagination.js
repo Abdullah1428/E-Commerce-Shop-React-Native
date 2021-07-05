@@ -14,7 +14,7 @@ const Pagination = ({pages, page}) => {
           <View key={x + 1}>
             <TouchableOpacity
               activeOpacity={0.5}
-              onPress={() => navigation.navigate('Home', (pageNumber = x + 1))}>
+              onPress={() => navigation.navigate('Home', {pageNumber: x + 1})}>
               <View
                 style={
                   x + 1 === page ? style.paginateBoxActive : style.paginateBox

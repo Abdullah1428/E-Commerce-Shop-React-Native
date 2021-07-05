@@ -23,9 +23,12 @@ const Home = ({navigation, route}) => {
   const [textInput, setTextInput] = useState('');
   const [keyword, setKeyword] = useState('');
 
-  let pageNumber = route.params;
+  let pageNumberObject = route.params;
 
-  pageNumber = pageNumber ? pageNumber : 1;
+  let pageNumber =
+    pageNumberObject && pageNumberObject.pageNumber
+      ? pageNumberObject.pageNumber
+      : 1;
 
   const dispatch = useDispatch();
 
