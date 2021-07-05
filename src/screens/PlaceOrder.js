@@ -12,6 +12,7 @@ import Message from '../components/Message';
 import Loader from '../components/Loader';
 
 import {createOrder} from '../redux/actions/orderActions';
+import {updateProductStock} from '../redux/actions/productActions';
 
 const PlaceOrder = ({navigation}) => {
   const dispatch = useDispatch();
@@ -58,6 +59,16 @@ const PlaceOrder = ({navigation}) => {
 
   const onPress = () => {
     setLoading(true);
+    cart.cartItems.map(item => {
+      item.countInStock = item.countInStock - item.qty;
+      dispatch(
+        updateProductStock({
+          _id: item.product,
+          countInStock: item.countInStock,
+        }),
+      );
+    });
+
     dispatch(
       createOrder({
         orderItems: cart.cartItems,
