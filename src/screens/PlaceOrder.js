@@ -19,6 +19,7 @@ const PlaceOrder = ({navigation}) => {
   const cart = useSelector(state => state.cart);
 
   const [loading, setLoading] = useState(false);
+  const [created, setCreated] = useState(false);
 
   const addDecimals = num => {
     return (Math.round(num * 100) / 100).toFixed(2);
@@ -37,15 +38,23 @@ const PlaceOrder = ({navigation}) => {
   ).toFixed(2);
 
   const orderCreate = useSelector(state => state.orderCreate);
-  const {order, success, error} = orderCreate;
+  const {order, error} = orderCreate;
+  let {success} = orderCreate;
 
   useEffect(() => {
-    if (success && order._id) {
+    if (success) {
       setLoading(false);
-      navigation.navigate('Order', (orderID = order._id));
+      callNavigate(order._id);
     }
     // eslint-disable-next-line
-  }, [success, order]);
+  }, [success]);
+
+  const callNavigate = orderID => {
+    if (created) {
+      setCreated(false);
+      navigation.navigate('Order', orderID);
+    }
+  };
 
   const onPress = () => {
     setLoading(true);
@@ -60,8 +69,8 @@ const PlaceOrder = ({navigation}) => {
         totalPrice: cart.totalPrice,
       }),
     );
+    setCreated(true);
   };
-
   const handleNav = nav => {
     navigation.navigate(nav);
   };

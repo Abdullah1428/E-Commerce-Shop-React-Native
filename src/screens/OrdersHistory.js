@@ -11,15 +11,13 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 
 import COLORS from '../utils/constants/colors';
-import products from '../utils/constants/products';
 
 import OrderHistoryItem from '../components/OrderHistoryItem';
-import Message from '../components/Message';
 import Loader from '../components/Loader';
 
 import {listMyOrders} from '../redux/actions/orderActions';
 
-const OrdersHistory = ({navigation}) => {
+const OrdersHistory = ({navigation, route}) => {
   const dispatch = useDispatch();
 
   const userLogin = useSelector(state => state.userLogin);
@@ -35,12 +33,16 @@ const OrdersHistory = ({navigation}) => {
   const [noLogin, setNoLogin] = useState(false);
 
   useEffect(() => {
-    if (!userInfo) {
-      setNoLogin(true);
-    } else {
-      setNoLogin(false);
-      dispatch(listMyOrders());
-    }
+    const unsubscribe = navigation.addListener('focus', () => {
+      if (!userInfo) {
+        setNoLogin(true);
+      } else {
+        setNoLogin(false);
+        dispatch(listMyOrders());
+      }
+    });
+
+    return unsubscribe;
   }, [dispatch, userInfo]);
 
   useEffect(() => {
@@ -50,7 +52,11 @@ const OrdersHistory = ({navigation}) => {
   }, [errorOrders]);
 
   const handleOrderDetail = orderID => {
-    navigation.navigate('OrderHistory', (orderID = orderID));
+    navigation.navigate('OrderHistory', orderID);
+  };
+
+  const handleLogin = redirect => {
+    navigation.navigate('Login', redirect);
   };
 
   return noLogin ? (
@@ -59,8 +65,7 @@ const OrdersHistory = ({navigation}) => {
         <Text style={style.titleNoLogin}>
           Want to see your orders history? Then
         </Text>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Login', (redirect = 'Orders'))}>
+        <TouchableOpacity onPress={() => handleLogin('Orders')}>
           <View style={style.viewNoLogin}>
             <Text style={style.textNoLogin}>SIGN UP/ SIGN IN</Text>
           </View>

@@ -86,14 +86,17 @@ const Profile = ({navigation}) => {
     ]);
   };
 
+  const handleLogin = redirect => {
+    navigation.navigate('Login', redirect);
+  };
+
   return noLogin ? (
     <>
       <View style={style.viewNoLoginContainer}>
         <Text style={style.titleNoLogin}>
           Don't have an account? Sign Up / Sign In
         </Text>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Login', (redirect = 'Profile'))}>
+        <TouchableOpacity onPress={() => handleLogin('Profile')}>
           <View style={style.viewNoLogin}>
             <Text style={style.textNoLogin}>SIGN UP/ SIGN IN</Text>
           </View>

@@ -107,7 +107,7 @@ const Order = ({navigation, route}) => {
               </Text>
               {order.isDelivered ? (
                 <View style={style.deliverBlockSuccess}>
-                  <Text style={style.deliverText}>
+                  <Text style={style.deliverTextSuccess}>
                     Delivered on {order.deliveredAt}
                   </Text>
                 </View>
@@ -124,7 +124,9 @@ const Order = ({navigation, route}) => {
               </Text>
               {order.isPaid ? (
                 <View style={style.deliverBlockSuccess}>
-                  <Text style={style.deliverText}>Paid on {order.paidAt}</Text>
+                  <Text style={style.deliverTextSuccess}>
+                    Paid on {order.paidAt}
+                  </Text>
                 </View>
               ) : (
                 <View style={style.deliverBlock}>
@@ -193,6 +195,12 @@ const style = StyleSheet.create({
   deliverText: {
     alignSelf: 'center',
     fontSize: 20,
+    fontWeight: 'bold',
+    color: COLORS.dark,
+  },
+  deliverTextSuccess: {
+    alignSelf: 'center',
+    fontSize: 15,
     fontWeight: 'bold',
     color: COLORS.dark,
   },

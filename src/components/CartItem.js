@@ -147,7 +147,7 @@ const style = StyleSheet.create({
   picker: {
     color: 'black',
     height: 40,
-    width: '40%',
+    width: '50%',
   },
 });
 

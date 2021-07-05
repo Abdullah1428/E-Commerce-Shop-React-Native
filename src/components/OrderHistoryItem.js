@@ -29,14 +29,14 @@ const OrderHistoryItem = ({item, handleOrderDetail}) => {
           <View style={style.detailsRowContainer}>
             {item.isPaid ? (
               <Text style={[style.name, {color: COLORS.green}]}>
-                {item.paidAt.substring(0, 10)}
+                Paid on : {item.paidAt.substring(0, 10)}
               </Text>
             ) : (
               <Text style={[style.name, {color: COLORS.red}]}>NOT PAID</Text>
             )}
             {item.isDelivered ? (
               <Text style={[style.name, {color: COLORS.green}]}>
-                {item.deliveredAt.substring(0, 10)}
+                Delivered on : {item.deliveredAt.substring(0, 10)}
               </Text>
             ) : (
               <Text style={[style.name, {color: COLORS.red}]}>
