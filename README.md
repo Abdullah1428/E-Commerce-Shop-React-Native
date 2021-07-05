@@ -1,8 +1,8 @@
 # Proshop_Mern_MobileApp
 
-Proshop mobile app version with react native Github: [@abdullah1428](https://github.com/Abdullah1428)
+Proshop mobile app version with react native by ABDULLAH : [@abdullah1428](https://github.com/Abdullah1428)
 
-> This is the react native mobile version of the udemy course https://www.udemy.com/course/mern-ecommerce/ by Github: [@bradtraversy](https://github.com/bradtraversy)
+> This is the react native mobile version of the udemy course https://www.udemy.com/course/mern-ecommerce by Github: [@bradtraversy](https://github.com/bradtraversy)
 
 E-commerce Mobile app built with MERN STACK (React Native instead of React).
 
@@ -34,10 +34,9 @@ yarn install
 ```
 
 ### Run
-
+- Backend Link: [Proshop_MERN_V2](https://github.com/Abdullah1428/Proshop_MERN_V2)
 ```
 # Configure and Run backend by following instructions in the README of backend project
-- Backend Link: [Proshop_MERN_V2](https://github.com/Abdullah1428/Proshop_MERN_V2)
 
 # Run App
 yarn react-native run-android
