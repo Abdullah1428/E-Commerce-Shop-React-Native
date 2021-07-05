@@ -26,23 +26,20 @@ const Order = ({navigation, route}) => {
   const orderDetails = useSelector(state => state.orderDetails);
   const {loading, error, order} = orderDetails;
 
-  const orderPay = useSelector(state => state.orderPay);
-  const {loading: loadingPay, success: successPay} = orderPay;
-
-  const orderDeliver = useSelector(state => state.orderDeliver);
-  const {loading: loadingDeliver, success: successDeliver} = orderDeliver;
-
   useEffect(() => {
     if (!userInfo) {
       navigation.navigate('Login');
     }
-
-    if (!order || successPay || successDeliver) {
+    if (!order) {
       dispatch({type: ORDER_PAY_RESET});
       dispatch({type: ORDER_DELIVER_RESET});
       dispatch(getOrderDetails(orderID));
     }
-  }, [dispatch, orderID, successPay, order, successDeliver, userInfo]);
+  }, [dispatch, orderID, order, userInfo]);
+
+  useEffect(() => {
+    dispatch(getOrderDetails(orderID));
+  }, []);
 
   return loading ? (
     <Loader />
