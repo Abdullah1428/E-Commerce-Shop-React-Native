@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {SafeAreaView, StyleSheet, View, Text} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -29,7 +29,7 @@ const Payment = ({navigation}) => {
   };
 
   const handleNav = nav => {
-    navigation.navigate(nav, (redirect = 'Shipping'));
+    navigation.navigate(nav);
   };
 
   return (

@@ -32,6 +32,8 @@ const Login = ({navigation, route}) => {
     if (userInfo) {
       if (redirect) {
         navigation.navigate(redirect);
+      } else {
+        navigation.navigate('Home');
       }
     }
   }, [userInfo, redirect]);

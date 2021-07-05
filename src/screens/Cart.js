@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {SafeAreaView, StyleSheet, View, Text, FlatList} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 

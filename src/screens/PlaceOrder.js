@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {SafeAreaView, StyleSheet, View, Text, FlatList} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -9,6 +9,7 @@ import {PrimaryButton} from '../components/Button';
 import CheckoutSteps from '../components/CheckoutSteps';
 import PlaceOrderItem from '../components/PlaceOrderItem';
 import Message from '../components/Message';
+import Loader from '../components/Loader';
 
 import {createOrder} from '../redux/actions/orderActions';
 
@@ -16,6 +17,8 @@ const PlaceOrder = ({navigation}) => {
   const dispatch = useDispatch();
 
   const cart = useSelector(state => state.cart);
+
+  const [loading, setLoading] = useState(false);
 
   const addDecimals = num => {
     return (Math.round(num * 100) / 100).toFixed(2);
@@ -37,12 +40,15 @@ const PlaceOrder = ({navigation}) => {
   const {order, success, error} = orderCreate;
 
   useEffect(() => {
-    if (success) {
+    if (success && order._id) {
+      setLoading(false);
       navigation.navigate('Order', (orderID = order._id));
     }
-  }, [success]);
+    // eslint-disable-next-line
+  }, [success, order]);
 
   const onPress = () => {
+    setLoading(true);
     dispatch(
       createOrder({
         orderItems: cart.cartItems,
@@ -57,7 +63,7 @@ const PlaceOrder = ({navigation}) => {
   };
 
   const handleNav = nav => {
-    navigation.navigate(nav, (redirect = 'Shipping'));
+    navigation.navigate(nav);
   };
 
   return (
@@ -67,8 +73,8 @@ const PlaceOrder = ({navigation}) => {
       <View style={style.shippingAddressContainer}>
         <Text style={style.title}>Shipping Address</Text>
         <Text numberOfLines={2} style={style.para}>
-          * {cart.shippingAddress.address}, {cart.shippingAddress.city}
-          {cart.shippingAddress.postalCode},{cart.shippingAddress.country}
+          * {cart.shippingAddress.address}, {cart.shippingAddress.city},{' '}
+          {cart.shippingAddress.postalCode}, {cart.shippingAddress.country}
         </Text>
       </View>
       <View style={style.paymentContainer}>
@@ -119,6 +125,7 @@ const PlaceOrder = ({navigation}) => {
               <Text style={style.summaryText}>${cart.totalPrice}</Text>
             </View>
             {error && <Message>{error}</Message>}
+            {loading && <Loader />}
             <View style={{marginHorizontal: 30}}>
               <PrimaryButton
                 title="Place Order"

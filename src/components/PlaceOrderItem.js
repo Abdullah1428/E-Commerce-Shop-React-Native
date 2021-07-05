@@ -1,4 +1,5 @@
 import React from 'react';
+import {LOCAL_SERVER_URL} from '@env';
 import {StyleSheet, View, Image, Text} from 'react-native';
 import COLORS from '../utils/constants/colors';
 

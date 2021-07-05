@@ -11,7 +11,7 @@ export const OrdersHistoryStack = () => {
       screenOptions={{header: () => null}}
       initialRouteName="Orders">
       <Stack.Screen name="Orders" component={OrdersHistory} />
-      <Stack.Screen name="Order" component={Order} />
+      <Stack.Screen name="OrderHistory" component={Order} />
     </Stack.Navigator>
   );
 };

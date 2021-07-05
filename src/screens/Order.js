@@ -40,7 +40,7 @@ const Order = ({navigation, route}) => {
     if (!order || successPay || successDeliver) {
       dispatch({type: ORDER_PAY_RESET});
       dispatch({type: ORDER_DELIVER_RESET});
-      dispatch(getOrderDetails(orderId));
+      dispatch(getOrderDetails(orderID));
     }
   }, [dispatch, orderID, successPay, order, successDeliver, userInfo]);
 

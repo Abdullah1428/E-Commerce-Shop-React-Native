@@ -9,7 +9,7 @@ const OrderHistoryItem = ({item, handleOrderDetail}) => {
         <View style={style.detailsContainer}>
           <View style={style.detailsRowContainer}>
             <Text numberOfLines={1} style={style.name}>
-              Order ID: 12134234214341431
+              Order ID: {item._id}
             </Text>
             <Text style={style.name}>21-07-2021</Text>
           </View>
